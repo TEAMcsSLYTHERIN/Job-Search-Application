@@ -6,7 +6,7 @@ var client = new twilio(accountSid, authToken);
 
 client.messages.create({
     body: 'Your appointment is in ' + 'days go here',
-    to: '+',  // Text this number
+    to: '+15512643547',  // Text this number
     from: '+19564773577' // From a valid Twilio number
 })
 .then((message) => console.log('then after twilio ',message.sid));
