@@ -5,7 +5,7 @@ const path = require('path');
 const pg = require('pg');
 const Sequelize = require('sequelize');
 const modelsFolder = path.join(__dirname, '../models')
-const conString = "postgres://drypdfhs:DOY4nIJI5Xg33wWkkUKu9fK7UYQS53Zf@elmer.db.elephantsql.com:5432/drypdfhs"
+const conString = process.env.DB_URL
 const sequelize = new Sequelize(conString)  // CREATING THE CONNECTION
 
 let db = {};
