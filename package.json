@@ -38,6 +38,7 @@
     "redux": "^4.0.0",
     "redux-wasp": "^0.2.1",
     "sequelize": "^4.41.0",
+    "twilio": "^3.23.1",
     "webpack": "^4.20.2"
   },
   "devDependencies": {
