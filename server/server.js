@@ -1,22 +1,28 @@
 const express = require('express');
-const app = express();
+const app = express();  // ?? This is basically us starting up the server
 const port = 3000;
 
 const graphqlHTTP = require('express-graphql');
 const schema = require('./schema/schema');
 
 
-app.use(express.static('./static'))
+const db = require('./database/elephantsql.js')
 
-app.use('/graphql', graphqlHTTP({
-  schema,
-  graphiql: true
-}))
+db.sequelize.sync().then(function() {
+  // MAKING SURE DATABASE TABLES & MODELS GET ASSOCIATED BEFORE STARTING UP THE SERVER
+  app.use(express.static('./dist'))
+  app.use(express.static('./static'))
 
-app.get('/', (req,res) => {
-  res.sendFile('index.html');
-})
+  app.get('/', (req,res) => {
+    res.sendFile('index.html')
+  })
 
-app.listen(port, () => {
-  console.log('listening on port: ' + port);
-})
+  app.use('/graphql', graphqlHTTP({
+    schema,
+    graphiql: true
+  }))
+
+  app.listen(port, () => {
+    console.log('listening on port: ' + port)
+  })
+});
