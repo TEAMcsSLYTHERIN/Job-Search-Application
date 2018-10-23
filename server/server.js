@@ -1,5 +1,7 @@
+require('dotenv').config();  //Making environmental variables accessible
+
 const express = require('express');
-const app = express();  // ?? This is basically us starting up the server
+const app = express();
 const port = 3000;
 
 const graphqlHTTP = require('express-graphql');
@@ -9,7 +11,7 @@ const schema = require('./schema/schema');
 const db = require('./database/elephantsql.js')
 
 db.sequelize.sync().then(function() {
-  // MAKING SURE DATABASE TABLES & MODELS GET ASSOCIATED BEFORE STARTING UP THE SERVER
+  //MAKING SURE DATABASE TABLES & MODELS GET ASSOCIATED BEFORE STARTING UP THE SERVER
   app.use(express.static('./dist'))
   app.use(express.static('./static'))
 
