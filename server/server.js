@@ -3,7 +3,10 @@ require('dotenv').config();  //Making environmental variables accessible
 const express = require('express');
 const app = express();
 const port = 3000;
-const path = require('path');
+
+const graphqlHTTP = require('express-graphql');
+const schema = require('./schema/schema');
+
 
 const db = require('./database/elephantsql.js')
 
@@ -15,6 +18,11 @@ db.sequelize.sync().then(function() {
   app.get('/', (req,res) => {
     res.sendFile('index.html')
   })
+
+  app.use('/graphql', graphqlHTTP({
+    schema,
+    graphiql: true
+  }))
 
   app.listen(port, () => {
     console.log('listening on port: ' + port)
