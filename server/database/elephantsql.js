@@ -32,18 +32,13 @@ fs  //Reads model folder directory & automatically adds every model in the folde
 
 Object.keys(db).forEach(modelName => {
     if (db[modelName].associate) {  
-      console.log('inside .associate if')
       db[modelName].associate(db);
     }
   });
-  
-
-console.log('db:', db)
 
 db.sequelize = sequelize
 db.Sequelize = Sequelize
 
-console.log('about to export db')
 module.exports = db;
 
 

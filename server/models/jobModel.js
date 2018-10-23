@@ -1,7 +1,6 @@
 'use strict';
 
 module.exports = (sequelize, DataTypes) => {
-  console.log('inside jobModel')
   const Job = sequelize.define('Job', {
     companyName: DataTypes.STRING,
     title: DataTypes.STRING,
@@ -9,14 +8,13 @@ module.exports = (sequelize, DataTypes) => {
     link: DataTypes.STRING,
     description: DataTypes.STRING,
     notes: DataTypes.STRING,
-    status: DataTypes.STRING,  //OPTIONS:: applied, rejected, in process, TBD
-    notification:  DataTypes.STRING  //OPTIONS:: 2 days, 7 days, 2 weeks
+    status: DataTypes.ENUM('Applied', 'Rejected', 'In Process', 'TBD'),
+    notification:  DataTypes.ENUM('1 Day', '2 Days', '3 Days', '7 Days', '1 Week', '2 Weeks')  // Subject to change depending on Twilio integration
   });
 
-  // Job.associate = function(models) {  // User should be passed in
-  //   console.log('passed db to Job associate')
-  //   models.Job.hasOne(models.User, {as:'user', constraints: 'false'});
-  // };
+  Job.associate = function(models) {
+    models.Job.hasOne(models.User, {as:'user', constraints: false, allowNull: true, defaultValue: null});
+  };
 
   return Job;
 };

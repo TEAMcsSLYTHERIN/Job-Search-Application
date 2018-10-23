@@ -1,7 +1,6 @@
 'use strict';
 
 module.exports = (sequelize, DataTypes) => {
-  console.log('inside userModel')
   const User = sequelize.define('User', {
     firstName: DataTypes.STRING,
     lastName: DataTypes.STRING,
@@ -11,8 +10,7 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   User.associate = function(models) { // Jobs model should be passed in
-    console.log('passed db to User associate')
-    models.User.hasMany(models.Job, {as: 'job', constraints: 'false'});
+    models.User.hasMany(models.Job, {as: 'job', constraints: false});
   };
 
   return User;

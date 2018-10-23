@@ -1,7 +1,6 @@
 'use strict';
 
 module.exports = (sequelize, DataTypes) => {
-  console.log('inside contactModel')
   const Contact = sequelize.define('Contact', {
     firstName: DataTypes.STRING,
     lastName: DataTypes.STRING,
@@ -10,8 +9,7 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   Contact.associate = function(models) { // Jobs model should be passed in
-    console.log('passed db to Contact associate')
-    models.Contact.hasOne(models.Job, {as: 'contact', constraints: 'false'});
+    models.Contact.hasOne(models.Job, {as: 'contact', constraints: false});
   };
 
   return Contact;
