@@ -1,7 +1,7 @@
 const graphql = require('graphql');
-const User = require('../models/user');
-const Application = require('../models/application');
-const Contact = require('../models/contact');
+const User = require('../models/userModel');
+const Job = require('../models/jobModel');
+const Contact = require('../models/contactModel');
 
 const {
   GraphQLObjectType,
@@ -22,19 +22,19 @@ const UserType = new GraphQLObjectType({
     password: { type: GraphQLString },
     email: { type: GraphQLString },
     phonenumber: { type: GraphQLInt },
-    applications: { 
-      type: new GraphQLList(ApplicationType),
+    jobs: { 
+      type: new GraphQLList(JobType),
       resolve(parent, args) {
         // postgres query
-        return Application.find()
+        return Job.find()
       }
     }
   })
 });
 
 // jobs
-const ApplicationType = new GraphQLObjectType({
-  name: 'Application',
+const JobType = new GraphQLObjectType({
+  name: 'Job',
   fields: () => ({
     id: { type: GraphQLString },
     companyname: { type: GraphQLString },
@@ -57,11 +57,11 @@ const ContactType = new GraphQLObjectType({
     compnay: { type: GraphQLString },
     email: { type: GraphQLString },
     phonenumber: { type: GraphQLInt },
-    applictions: {
-      type: new GraphQLList(ApplicationType),
+    jobs: {
+      type: new GraphQLList(JobType),
       resolve(parent, args) {
         // postgres query
-        return Application.find()
+        return Job.find()
       }
     }
   })
@@ -103,8 +103,8 @@ const Mutation = new GraphQLObjectType({
         return newUser.save();
       }
     },
-    addApplication: {
-      type: ApplicationType,
+    addJob: {
+      type: JobType,
       args: {
         companyname: { type: new GraphQLNonNull(GraphQLString) },
         title: { type: new GraphQLNonNull(GraphQLString) },
@@ -116,8 +116,8 @@ const Mutation = new GraphQLObjectType({
         notifications: { type: new GraphQLNonNull(GraphQLString) }
       },
       resolve(parents, args) {
-        // postgres save application query
-        let newApplication = new Application({
+        // postgres save Job query
+        let newJob = new Job({
           companyname: args.companyname,
           title: args.title,
           dateapplied: args.dateapplied,
@@ -127,7 +127,7 @@ const Mutation = new GraphQLObjectType({
           status: args.status,
           notifications: args.notifications
         })
-        return newApplication.save()
+        return newJob.save()
       }
     },
     addContact: {
