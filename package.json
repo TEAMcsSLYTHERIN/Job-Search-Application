@@ -33,12 +33,9 @@
     "express-graphql": "^0.6.12",
     "graphql": "^14.0.2",
     "graphql-tag": "^2.10.0",
-<<<<<<< HEAD
     "node-fetch": "^2.2.0",
-=======
     "pg": "^7.5.0",
     "pg-hstore": "^2.3.2",
->>>>>>> bbfc822e6561fd4aaf1f2742dd1bbab592607d05
     "react": "^16.5.2",
     "react-cookie": "^3.0.4",
     "react-dom": "^16.5.2",
