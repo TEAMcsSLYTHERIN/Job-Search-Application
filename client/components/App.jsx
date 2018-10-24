@@ -2,10 +2,12 @@ import React, { Component } from 'react';
 import { debug } from 'util';
 import { GoogleLogin } from 'react-google-login';
 import { GoogleLogout } from 'react-google-login';
+import { withCookies } from 'react-cookie';
 
 class App extends Component {
     
   responseGoogle(response) {
+    console.log(response);
     fetch('/auth', {
       method: 'POST',
       headers: {
@@ -51,4 +53,4 @@ class App extends Component {
   
 }
 
-export default App;
+export default withCookies(App);

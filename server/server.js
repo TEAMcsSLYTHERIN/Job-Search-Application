@@ -27,11 +27,13 @@ db.sequelize.sync().then(function() {
     next();
     },
     (req, res) => {
+      console.log(req.headers);
       fetch(`https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=${req.headers.authorization}`)
-      .then(res => {
-        console.log('RES STATUS', res.status)
-        let status = res.status 
-  
+      .then(googleRes => {
+        console.log('RES STATUS', res)
+        let status = googleRes.status 
+        res.cookie('authorized', 'yes')
+        res.send()
         // if (status === 200) // check db for user 
           // if user exists in db, create authenticated session with timeout 
         
