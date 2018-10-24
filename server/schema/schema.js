@@ -2,6 +2,10 @@ const graphql = require('graphql');
 const User = require('../models/userModel');
 const Job = require('../models/jobModel');
 const Contact = require('../models/contactModel');
+const connectionString = process.env.DB_URL;
+const pgp = require('pg-promise')();
+const db = {}
+db.conn = pgp(connectionString);
 
 const {
   GraphQLObjectType,
@@ -18,10 +22,8 @@ const UserType = new GraphQLObjectType({
   name: 'User',
   fields: () => ({
     id: { type: GraphQLString },
-    username: { type: GraphQLString },
-    password: { type: GraphQLString },
-    email: { type: GraphQLString },
-    phonenumber: { type: GraphQLInt },
+    firstName: { type: GraphQLString },
+    lastName: { type: GraphQLString },
     jobs: { 
       type: new GraphQLList(JobType),
       resolve(parent, args) {
@@ -53,10 +55,10 @@ const ContactType = new GraphQLObjectType({
   name: 'Contact',
   fields: () => ({
     id: { type: GraphQLString },
-    name: { type: GraphQLString },
-    compnay: { type: GraphQLString },
+    firstName: { type: GraphQLString },
+    lastName: { type: GraphQLString },
     email: { type: GraphQLString },
-    phonenumber: { type: GraphQLInt },
+    phone: { type: GraphQLInt },
     jobs: {
       type: new GraphQLList(JobType),
       resolve(parent, args) {
@@ -72,10 +74,25 @@ const RootQuery = new GraphQLObjectType({
   fields: {
     user: {
       type: UserType,
-      args: { UserId: { type: GraphQLString } },
+      args: { UserId: { type: GraphQLID } },
       resolve(parent, args) {
         // postgres query
-        return User.findById(args.UserId);
+        query = `SELECT * FROM "public"."users" WHERE id=${args.UserId}`;
+        return db.conn.one(query)
+      }
+    },
+    allUsers: {
+      type: new GraphQLList(UserType),
+      resolve(parent, args) {
+        query = `SELECT * FROM "public"."users"`;
+        return db.conn.many(query)
+      }
+    },
+    allContacts: {
+      type: new GraphQLList(ContactType),
+      resolve(parent, args) {
+        const query = `SELECT * FROM "public"."Contacts"`;
+        return db.conn.many(query)
       }
     }
   }
@@ -87,20 +104,12 @@ const Mutation = new GraphQLObjectType({
     addUser: {
       type: UserType,
       args: {
-        username: { type: new GraphQLNonNull(GraphQLString) },
-        password: { type: new GraphQLNonNull(GraphQLString) },
-        email: { type: new GraphQLNonNull(GraphQLString) },
-        phonenumber: { type: new GraphQLNonNull(GraphQLInt) }
+        firstName: { type: new GraphQLNonNull(GraphQLString) },
+        lastName: { type: new GraphQLNonNull(GraphQLString) }
       },
       resolve(parent, args) {
-        // postgres save user query
-        let newUser = new User({
-          username: args.username,
-          password: args.password,
-          email: args.email,
-          phonenumber: args.phonenumber
-        })
-        return newUser.save();
+        query = `INSERT INTO "public"."users" ("firstName", "lastName", "createdAt", "updatedAt") VALUES ('${args.firstName}', '${args.lastName}', '2018-10-23 01:09:38 +0000', '2018-10-23 01:09:38 +0000')`;
+        return db.conn.one(query);
       }
     },
     addJob: {
