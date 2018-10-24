@@ -19,16 +19,16 @@ db.sequelize.sync().then(function() {
     res.sendFile('index.html')
   })
 
-<<<<<<< HEAD
+// <<<<<<< HEAD
   app.use('/graphql', graphqlHTTP({
     schema,
     graphiql: true
   }))
-=======
-app.get('/', (req, res) => {
-  res.sendFile('index.html')
-})
->>>>>>> semantic-ui
+// =======
+// app.get('/', (req, res) => {
+//   res.sendFile('index.html')
+// })
+// >>>>>>> semantic-ui
 
   app.listen(port, () => {
     console.log('listening on port: ' + port)
