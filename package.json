@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "main": "webpack.config.js",
+  "files": [ 
+    "dist/bundle.js",
+    "dist/index.html"
+  ],
   "scripts": {
     "build": "webpack",
     "start": "concurrently --kill-others-on-fail \"yarn start:server\" \"yarn start:client\"",
