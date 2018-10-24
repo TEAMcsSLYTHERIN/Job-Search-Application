@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   User.associate = function(models) {
-    models.User.hasMany(models.Job, {as: 'job', constraints: false});
+    models.User.hasMany(models.Application, {as: 'applicatons', constraints: false});
   };
 
   return User;

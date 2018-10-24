@@ -1,6 +1,6 @@
 const graphql = require('graphql');
 const User = require('../models/userModel');
-const Job = require('../models/jobModel');
+const Application = require('../models/applicationModel');
 const Contact = require('../models/contactModel');
 const connectionString = process.env.DB_URL;
 const pgp = require('pg-promise')();
@@ -24,25 +24,25 @@ const UserType = new GraphQLObjectType({
     id: { type: GraphQLString },
     firstName: { type: GraphQLString },
     lastName: { type: GraphQLString },
-    jobs: { 
-      type: new GraphQLList(JobType),
+    applications: { 
+      type: new GraphQLList(ApplicationType),
       resolve(parent, args) {
         // postgres query
-        return Job.find()
+        return Application.find()
       }
     }
   })
 });
 
-// jobs
-const JobType = new GraphQLObjectType({
-  name: 'Job',
+// applications
+const ApplicationType = new GraphQLObjectType({
+  name: 'Application',
   fields: () => ({
     id: { type: GraphQLString },
     companyname: { type: GraphQLString },
     title: { type: GraphQLString },
     dateapplied: { type: GraphQLString },
-    linktojobs: { type: GraphQLString },
+    linktoapplications: { type: GraphQLString },
     description: { type: GraphQLString },
     notes: { type: GraphQLString },
     status: { type: GraphQLString },
@@ -59,11 +59,11 @@ const ContactType = new GraphQLObjectType({
     lastName: { type: GraphQLString },
     email: { type: GraphQLString },
     phone: { type: GraphQLInt },
-    jobs: {
-      type: new GraphQLList(JobType),
+    applications: {
+      type: new GraphQLList(ApplicationType),
       resolve(parent, args) {
         // postgres query
-        return Job.find()
+        return Application.find()
       }
     }
   })
@@ -112,31 +112,31 @@ const Mutation = new GraphQLObjectType({
         return db.conn.one(query);
       }
     },
-    addJob: {
-      type: JobType,
+    addApplication: {
+      type: ApplicationType,
       args: {
         companyname: { type: new GraphQLNonNull(GraphQLString) },
         title: { type: new GraphQLNonNull(GraphQLString) },
         dateapplied: { type: new GraphQLNonNull(GraphQLString) },
-        linktojobs: { type: new GraphQLNonNull(GraphQLString) },
+        linktoapplications: { type: new GraphQLNonNull(GraphQLString) },
         description: { type: new GraphQLNonNull(GraphQLString) },
         notes: { type: new GraphQLNonNull(GraphQLString) },
         status: { type: new GraphQLNonNull(GraphQLString) },
         notifications: { type: new GraphQLNonNull(GraphQLString) }
       },
       resolve(parents, args) {
-        // postgres save Job query
-        let newJob = new Job({
+        // postgres save Application query
+        let newApplication = new Application({
           companyname: args.companyname,
           title: args.title,
           dateapplied: args.dateapplied,
-          linktojobs: args.linktojobs,
+          linktoapplications: args.linktoapplications,
           description: args.description,
           notes: args.notes,
           status: args.status,
           notifications: args.notifications
         })
-        return newJob.save()
+        return newApplication.save()
       }
     },
     addContact: {
