@@ -24,11 +24,17 @@
     "babel-polyfill": "^6.26.0",
     "cookie-parser": "^1.4.3",
     "cors": "^2.8.4",
+    "dotenv": "^6.1.0",
     "express": "^4.16.4",
     "express-graphql": "^0.6.12",
     "graphql": "^14.0.2",
     "graphql-tag": "^2.10.0",
+<<<<<<< HEAD
     "node-fetch": "^2.2.0",
+=======
+    "pg": "^7.5.0",
+    "pg-hstore": "^2.3.2",
+>>>>>>> bbfc822e6561fd4aaf1f2742dd1bbab592607d05
     "react": "^16.5.2",
     "react-cookie": "^3.0.4",
     "react-dom": "^16.5.2",
@@ -37,6 +43,8 @@
     "react-router-dom": "^4.3.1",
     "redux": "^4.0.0",
     "redux-wasp": "^0.2.1",
+    "sequelize": "^4.41.0",
+    "twilio": "^3.23.1",
     "webpack": "^4.20.2"
   },
   "devDependencies": {
@@ -56,6 +64,7 @@
     "nodemon": "^1.18.4",
     "redux-devtools-extension": "^2.13.5",
     "sass-loader": "^7.1.0",
+    "sequelize-cli": "^5.2.0",
     "style-loader": "^0.23.1",
     "webpack-cli": "^3.1.2",
     "webpack-dev-server": "^3.1.9"
