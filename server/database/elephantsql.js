@@ -6,12 +6,7 @@ const pg = require('pg');
 const Sequelize = require('sequelize');
 const modelsFolder = path.join(__dirname, '../models')
 const conString = process.env.DB_URL
-const sequelize = new Sequelize(conString, {
-  dialect: 'mysql',
-  define: {
-      timestamps: false
-  }
-})
+const sequelize = new Sequelize(conString)
 
 let db = {};
 
