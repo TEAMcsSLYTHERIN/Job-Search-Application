@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
     phone: DataTypes.INTEGER,
   });
 
-  User.associate = function(models) { // Jobs model should be passed in
+  User.associate = function(models) {
     models.User.hasMany(models.Job, {as: 'job', constraints: false});
   };
 

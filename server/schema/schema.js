@@ -1,7 +1,7 @@
 const graphql = require('graphql');
-const User = require('../models/user');
-const Application = require('../models/application');
-const Contact = require('../models/contact');
+const User = require('../models/userModel');
+const Application = require('../models/applicationModel');
+const Contact = require('../models/contactModel');
 
 const {
   GraphQLObjectType,

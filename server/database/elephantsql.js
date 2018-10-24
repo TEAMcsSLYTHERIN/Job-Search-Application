@@ -6,7 +6,12 @@ const pg = require('pg');
 const Sequelize = require('sequelize');
 const modelsFolder = path.join(__dirname, '../models')
 const conString = process.env.DB_URL
-const sequelize = new Sequelize(conString)  // CREATING THE CONNECTION
+const sequelize = new Sequelize(conString, {
+  dialect: 'mysql',
+  define: {
+      timestamps: false
+  }
+})
 
 let db = {};
 
@@ -40,10 +45,3 @@ db.sequelize = sequelize
 db.Sequelize = Sequelize
 
 module.exports = db;
-
-
-/* 
-SOURCES:
-https://sequelize.readthedocs.io/en/1.7.0/articles/express/
-https://scotch.io/tutorials/getting-started-with-node-express-and-postgres-using-sequelize
-*/
