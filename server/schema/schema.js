@@ -1,7 +1,11 @@
 const graphql = require('graphql');
 const User = require('../models/userModel');
-const Application = require('../models/jobModel');
+const Job = require('../models/jobModel');
 const Contact = require('../models/contactModel');
+const connectionString = process.env.DB_URL;
+const pgp = require('pg-promise')();
+const db = {}
+db.conn = pgp(connectionString);
 
 const {
   GraphQLObjectType,
@@ -18,33 +22,33 @@ const UserType = new GraphQLObjectType({
   name: 'User',
   fields: () => ({
     id: { type: GraphQLString },
-    username: { type: GraphQLString },
+    firstName: { type: GraphQLString },
+    lastName: { type: GraphQLString },
     password: { type: GraphQLString },
     email: { type: GraphQLString },
-    phonenumber: { type: GraphQLInt },
-    applications: { 
-      type: new GraphQLList(ApplicationType),
+    phone: { type: GraphQLInt },
+    jobs: { 
+      type: new GraphQLList(JobType),
       resolve(parent, args) {
         // postgres query
-        return Application.find()
+        return Job.find()
       }
     }
   })
 });
 
 // jobs
-const ApplicationType = new GraphQLObjectType({
-  name: 'Application',
+const JobType = new GraphQLObjectType({
+  name: 'Job',
   fields: () => ({
     id: { type: GraphQLString },
-    companyname: { type: GraphQLString },
+    companyName: { type: GraphQLString },
     title: { type: GraphQLString },
-    dateapplied: { type: GraphQLString },
-    linktojobs: { type: GraphQLString },
+    dateApplied: { type: GraphQLString },
+    link: { type: GraphQLString },
     description: { type: GraphQLString },
     notes: { type: GraphQLString },
-    status: { type: GraphQLString },
-    notifications: { type: GraphQLString }
+    contact: { type: GraphQLString }
   })
 });
 
@@ -52,16 +56,16 @@ const ApplicationType = new GraphQLObjectType({
 const ContactType = new GraphQLObjectType({
   name: 'Contact',
   fields: () => ({
-    id: { type: GraphQLString },
-    name: { type: GraphQLString },
-    compnay: { type: GraphQLString },
+    id: { type: GraphQLID },
+    firstName: { type: GraphQLString },
+    lastName: { type: GraphQLString },
     email: { type: GraphQLString },
-    phonenumber: { type: GraphQLInt },
-    applictions: {
-      type: new GraphQLList(ApplicationType),
+    phone: { type: GraphQLInt },
+    jobs: {
+      type: new GraphQLList(JobType),
       resolve(parent, args) {
         // postgres query
-        return Application.find()
+        return Job.find()
       }
     }
   })
@@ -72,10 +76,48 @@ const RootQuery = new GraphQLObjectType({
   fields: {
     user: {
       type: UserType,
-      args: { UserId: { type: GraphQLString } },
+      args: { UserId: { type: GraphQLID } },
       resolve(parent, args) {
         // postgres query
-        return User.findById(args.UserId);
+        query = `SELECT * FROM "public"."Users" WHERE id=${args.UserId}`;
+        return db.conn.one(query)
+      }
+    },
+    allUsers: {
+      type: new GraphQLList(UserType),
+      resolve(parent, args) {
+        query = `SELECT * FROM "public"."Users"`;
+        return db.conn.many(query)
+      }
+    },
+    conatact: {
+      type: ContactType,
+      args: { ContactId: {type: GraphQLID} },
+      resolve(parent, args) {
+        query = `SELECT * FROM "public"."Contacts" WHERE id=${args.ContactId}`;
+        return db.conn.one(query);
+      }
+    },
+    allContacts: {
+      type: new GraphQLList(ContactType),
+      resolve(parent, args) {
+        const query = `SELECT * FROM "public"."Contacts"`;
+        return db.conn.many(query)
+      }
+    },
+    job: {
+      type: JobType,
+      args: { JobsId: {type: GraphQLID} },
+      resolve(parent, args) {
+        query = `SELECT * FROM "public"."Jobs" WHERE id=${args.JobsId}`;
+        return db.conn.one(query);
+      }
+    },
+    allJobs: {
+      type: new GraphQLList(JobType),
+      resolve(parent, args) {
+        query = `SELECT * FROM "public"."Jobs"`
+        return db.conn.many(query);
       }
     }
   }
@@ -87,47 +129,31 @@ const Mutation = new GraphQLObjectType({
     addUser: {
       type: UserType,
       args: {
-        username: { type: new GraphQLNonNull(GraphQLString) },
+        firstName: { type: new GraphQLNonNull(GraphQLString) },
+        lastName: { type: new GraphQLNonNull(GraphQLString) },
         password: { type: new GraphQLNonNull(GraphQLString) },
         email: { type: new GraphQLNonNull(GraphQLString) },
-        phonenumber: { type: new GraphQLNonNull(GraphQLInt) }
+        phone: { type: new GraphQLNonNull(GraphQLInt) }
       },
       resolve(parent, args) {
-        // postgres save user query
-        let newUser = new User({
-          username: args.username,
-          password: args.password,
-          email: args.email,
-          phonenumber: args.phonenumber
-        })
-        return newUser.save();
+        query = `INSERT INTO "public"."Users" ("firstName", "lastName", "password", "email", "phone", "createdAt", "updatedAt") VALUES ('${args.firstName}', '${args.lastName}', '${args.password}', '${args.email}', '${args.phone}', '2018-10-23 01:09:38 +0000', '2018-10-23 01:09:38 +0000')`;
+        return db.conn.one(query);
       }
     },
-    addApplication: {
-      type: ApplicationType,
+    addJob: {
+      type: JobType,
       args: {
-        companyname: { type: new GraphQLNonNull(GraphQLString) },
+        companyName: { type: new GraphQLNonNull(GraphQLString) },
         title: { type: new GraphQLNonNull(GraphQLString) },
-        dateapplied: { type: new GraphQLNonNull(GraphQLString) },
-        linktojobs: { type: new GraphQLNonNull(GraphQLString) },
+        dateApplied: { type: new GraphQLNonNull(GraphQLString) },
+        link: { type: new GraphQLNonNull(GraphQLString) },
         description: { type: new GraphQLNonNull(GraphQLString) },
         notes: { type: new GraphQLNonNull(GraphQLString) },
-        status: { type: new GraphQLNonNull(GraphQLString) },
-        notifications: { type: new GraphQLNonNull(GraphQLString) }
+        contact: { type: new GraphQLNonNull(GraphQLString) }
       },
       resolve(parents, args) {
-        // postgres save application query
-        let newApplication = new Application({
-          companyname: args.companyname,
-          title: args.title,
-          dateapplied: args.dateapplied,
-          linktojobs: args.linktojobs,
-          description: args.description,
-          notes: args.notes,
-          status: args.status,
-          notifications: args.notifications
-        })
-        return newApplication.save()
+        query = `INSERT INTO "public"."Jobs" ("companyName", "title", "dateApplied", "link", "description", "notes", "contact", "createdAt", "updatedAt") VALUES ('${args.companyName}', '${args.title}', '${args.dateApplied}', '${args.link}', '${args.description}', '${args.notes}', '${args.contact}' , '2018-10-23 01:09:38 +0000', '2018-10-23 01:09:38 +0000')`;
+        return db.conn.one(query);
       }
     },
     addContact: {

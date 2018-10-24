@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
     lastName: DataTypes.STRING,
     password: DataTypes.STRING,
     email: DataTypes.STRING,
-    phone: DataTypes.INTEGER,
+    phone: DataTypes.INTEGER
   });
 
   User.associate = function(models) { // Jobs model should be passed in

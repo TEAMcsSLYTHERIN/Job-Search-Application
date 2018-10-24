@@ -22,6 +22,9 @@ db.sequelize.sync().then(function() {
     schema,
     graphiql: true
   }))
+app.get('/', (req, res) => {
+  res.sendFile('index.html')
+})
 
   app.post('/auth', (req, res, next) => {
     next();

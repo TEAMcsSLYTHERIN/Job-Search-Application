@@ -1,15 +1,15 @@
 import React from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import App from './components/App';
 import { CookiesProvider } from 'react-cookie';
+import { HashRouter } from 'react-router-dom';
 
 const Root = ({ store }) => (
   <CookiesProvider>
     <Provider store={store}>
-      <Router>
-        <Route path='/:filter?' component={App} />
-      </Router>
+      <HashRouter>
+        <App />
+      </HashRouter>
     </Provider>
   </CookiesProvider>
 );

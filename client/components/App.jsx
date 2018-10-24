@@ -52,5 +52,4 @@ class App extends Component {
   }
   
 }
-
 export default withCookies(App);
