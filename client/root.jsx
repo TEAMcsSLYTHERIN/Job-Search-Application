@@ -3,8 +3,9 @@ import { Provider, connect } from 'react-redux';
 import { Component } from 'react';
 import App from './components/App';
 import { CookiesProvider, withCookies} from 'react-cookie';
-import { HashRouter, Redirect, Route } from 'react-router-dom';
+import { HashRouter, Redirect, Route, Switch } from 'react-router-dom';
 import DashboardContainer from './components/Dashboard/DashboardContainer';
+import JobForm from './components/JobForms/JobForm';
 import AuthContainer from './components/Auth/AuthContainer';
 import store from './store';
 
@@ -20,20 +21,27 @@ class Root extends Component {
   }
 
   render() {
-    let body;
-
-    if(this.props.allCookies.authorized === 'yes') {
-      body = <Route render={() => (<DashboardContainer cookies={this.props.allCookies.authorized}/>)} />
-    } else {
-      body = <Route render={() => (<AuthContainer cookies={this.props.allCookies.authorized}/>)} />
-    }
     return (
     <CookiesProvider>
       <Provider store={store}>
         <HashRouter>
-          <div>
-            {body}
-          </div>
+          <Switch>
+            <Route exact path="/" render={() => !this.props.allCookies.authorized ? ( 
+              <AuthContainer cookies={this.props.allCookies.authorized} /> 
+              ) : (
+              <Redirect to="/dashboard" />
+            )} />
+            <Route exact path="/dashboard" render={() => this.props.allCookies.authorized ? ( 
+              <DashboardContainer cookies={this.props.allCookies.authorized} /> 
+              ) : (
+              <Redirect to="/" />
+            )} />
+            <Route exact path="/form" render={() => this.props.allCookies.authorized ? ( 
+              <JobForm cookies={this.props.allCookies.authorized} /> 
+              ) : (
+              <Redirect to="/" />
+            )} />
+          </Switch>
         </HashRouter>
       </Provider>
     </CookiesProvider>
