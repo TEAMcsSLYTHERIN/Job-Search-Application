@@ -30,11 +30,8 @@ app.get('/', (req, res) => {
     next();
     },
     (req, res) => {
-      console.log(req.headers);
       fetch(`https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=${req.headers.authorization}`)
       .then(googleRes => {
-        console.log('RES STATUS', res)
-        let status = googleRes.status 
         res.cookie('authorized', 'yes')
         res.send()
         // if (status === 200) // check db for user 
@@ -48,6 +45,6 @@ app.get('/', (req, res) => {
   )
 
   app.listen(port, () => {
-    console.log('listening on port: ' + port)
+    console.log('Listening on port: ' + port)
   })
 });

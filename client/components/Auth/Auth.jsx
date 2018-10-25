@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { Component } from 'react';
+import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import Avatar from '@material-ui/core/Avatar';
-// import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -14,6 +14,9 @@ import Typography from '@material-ui/core/Typography';
 import withStyles from '@material-ui/core/styles/withStyles';
 
 import AuthButton from './AuthButton';
+
+import { GoogleLogin } from 'react-google-login';
+import { GoogleLogout } from 'react-google-login';
 
 const styles = theme => ({
   layout: {
@@ -47,44 +50,81 @@ const styles = theme => ({
   },
 });
 
-function Auth(props) {
-  const { classes, isLoggedIn, setLoggedIn } = props;
+class Auth extends Component {
+  constructor(props) {
+    super(props)
+  }
 
+  responseGoogle(response) {
+    fetch('/auth', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `${response.tokenId}`
+      }
+    })
+  }
+
+  handleFail(e) {
+    console.log('in failure', e);
+  }
+
+  signOut() {
+    let auth2 = gapi.auth2.getAuthInstance();
+    auth2.signOut().then(res => {
+      console.log('User signed out.', res);
+    });
+  }
+
+render() {
   return (
-    <React.Fragment>
-      <CssBaseline />
-      <main className={classes.layout}>
-        <Paper className={classes.paper}>
-          <Avatar className={classes.avatar}>
-            <LockIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign in
-          </Typography>
-          <form className={classes.form}>
-            <FormControl margin="normal" required fullWidth>
-              <InputLabel htmlFor="email">Email Address</InputLabel>
-              <Input id="email" name="email" autoComplete="email" autoFocus />
-            </FormControl>
-            <FormControl margin="normal" required fullWidth>
-              <InputLabel htmlFor="password">Password</InputLabel>
-              <Input
-                name="password"
-                type="password"
-                id="password"
-                autoComplete="current-password"
+      <React.Fragment>
+        <CssBaseline />
+        <main className={this.props.classes.layout}>
+          <Paper className={this.props.classes.paper}>
+            <Avatar className={this.props.classes.avatar}>
+              <LockIcon />
+            </Avatar>
+            <Typography component="h1" variant="h5">
+              Sign in
+            </Typography>
+            <form className={this.props.classes.form}>
+              <FormControl margin="normal" required fullWidth>
+                <InputLabel htmlFor="email">Email Address</InputLabel>
+                <Input id="email" name="email" autoComplete="email" autoFocus />
+              </FormControl>
+              <FormControl margin="normal" required fullWidth>
+                <InputLabel htmlFor="password">Password</InputLabel>
+                <Input
+                  name="password"
+                  type="password"
+                  id="password"
+                  autoComplete="current-password"
+                />
+              </FormControl>
+              <FormControlLabel
+                control={<Checkbox value="remember" color="primary" />}
+                label="Remember me"
               />
-            </FormControl>
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
+              <AuthButton 
+                isLoggedIn={this.props.isLoggedIn} 
+                setLoggedIn={this.props.setLoggedIn} 
+                classes={this.props.classes} 
+              />
+              <GoogleLogin
+                onClick={() => {this.onSignIn}}
+                clientId='785379560416-oee86k0flmbp00qkc52mcvaoqs6g307a.apps.googleusercontent.com'
+                buttonText='Login'
+                onSuccess={this.responseGoogle}
+                onFailure={this.handleFail}
             />
-            <AuthButton isLoggedIn={isLoggedIn} setLoggedIn={setLoggedIn} classes={classes} />
-          </form>
-        </Paper>
-      </main>
-    </React.Fragment>
-  );
+
+            </form>
+          </Paper>
+        </main>
+      </React.Fragment>
+    );
+  }
 }
 
 Auth.propTypes = {

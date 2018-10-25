@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import Auth from './Auth';
 import {connect} from 'react-redux';
 import * as actions from '../../actions/actionCreators'
+import { GoogleLogin } from 'react-google-login';
+import { GoogleLogout } from 'react-google-login';
 
 const mapStateToProps = store => ({
   ...store.jobSearch
@@ -15,13 +17,37 @@ const mapDispatchToProps = dispatch => ({
 })
 
 class AuthContainer extends Component {
+
+  responseGoogle(response) {
+    fetch('/auth', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `${response.tokenId}`
+      }})
+  }
+
+  handleFail(e) {
+    console.log('in failure', e);
+  }
+
+  signOut() {
+    let auth2 = gapi.auth2.getAuthInstance();
+    auth2.signOut().then(res => {
+      console.log('User signed out.', res);
+    });
+  }
+
   render(){
-    console.log(this.props.history)
     const { isLoggedIn, setLoggedIn } = this.props;
     return (
-      <Auth
-        isLoggedIn={isLoggedIn} 
-        setLoggedIn={setLoggedIn}/>
+      <div>
+        
+        <Auth
+          isLoggedIn={isLoggedIn} 
+          setLoggedIn={setLoggedIn}
+        />
+      </div>
     )
   }
 }

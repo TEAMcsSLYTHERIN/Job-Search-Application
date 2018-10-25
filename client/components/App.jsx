@@ -7,16 +7,12 @@ import { withCookies } from 'react-cookie';
 class App extends Component {
     
   responseGoogle(response) {
-    console.log(response);
     fetch('/auth', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `${response.tokenId}`
-      }})
-    .then(res => res.json())
-    .then(res => {
-      console.log('res', res);
+      }
     })
   }
 
