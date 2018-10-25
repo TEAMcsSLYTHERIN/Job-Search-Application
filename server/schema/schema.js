@@ -152,23 +152,8 @@ const Mutation = new GraphQLObjectType({
         contact: { type: new GraphQLNonNull(GraphQLString) }
       },
       resolve(parents, args) {
-// <<<<<<< HEAD
-        // postgres save Application query
-        let newApplication = new Application({
-          companyname: args.companyname,
-          title: args.title,
-          dateapplied: args.dateapplied,
-          linktoapplications: args.linktoapplications,
-          description: args.description,
-          notes: args.notes,
-          status: args.status,
-          notifications: args.notifications
-        })
-        return newApplication.save()
-// =======
         query = `INSERT INTO "public"."Applications" ("companyName", "title", "dateApplied", "link", "description", "notes", "contact", "createdAt", "updatedAt") VALUES ('${args.companyName}', '${args.title}', '${args.dateApplied}', '${args.link}', '${args.description}', '${args.notes}', '${args.contact}' , '2018-10-23 01:09:38 +0000', '2018-10-23 01:09:38 +0000')`;
         return db.conn.one(query);
-// >>>>>>> 35f70f2412d54e6059e87cf1dcfdd423aba45468
       }
     },
     addContact: {

@@ -8,6 +8,26 @@ const fetch = require('node-fetch');
 const graphqlHTTP = require('express-graphql');
 const schema = require('./schema/schema');
 const db = require('./database/elephantsql.js')
+const { PassThrough } = require('stream');
+
+function graphqlMiddlewareWrapper(graphqlMiddleware) {
+  return (req, res, next) => {
+      const resProxy = new PassThrough();
+      resProxy.headers = new Map();
+      resProxy.statusCode = 200;
+      resProxy.setHeader = (name, value) => {
+          resProxy.headers.set(name, value);
+      };
+      res.graphqlResponse = (cb) => {
+          res.statusCode = resProxy.statusCode;
+          resProxy.headers.forEach((value, name) => {
+              res.setHeader(name, value);
+          });
+          resProxy.pipe(res).on('finish', cb);
+      };
+      graphqlMiddleware(req, resProxy).then(() => next(), next);
+  };
+}
 
 db.sequelize.sync().then(function() {
   //MAKING SURE DATABASE TABLES & MODELS GET ASSOCIATED BEFORE STARTING UP THE SERVER
@@ -22,9 +42,12 @@ db.sequelize.sync().then(function() {
     schema,
     graphiql: true
   }))
-app.get('/', (req, res) => {
-  res.sendFile('index.html')
-})
+
+
+
+  app.get('/', (req, res) => {
+    res.sendFile('index.html')
+  })
 
   app.post('/auth', (req, res, next) => {
     next();
