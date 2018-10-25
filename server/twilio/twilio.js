@@ -46,7 +46,7 @@ module.exports = {
     },
 
     followUpNotification: function(followUpId, selectedTime) {
-      use followUpId to source notification information, use selectedTime as input for message
+      // use followUpId to source notification information, use selectedTime as input for message
     },
 
     eventNotification: function(eventId, selectedTime) {
