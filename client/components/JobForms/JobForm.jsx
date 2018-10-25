@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { query } from 'wasp-graphql';
+import { query, mutation } from 'wasp-graphql';
 import * as queries from '../../queries/queries';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
@@ -91,10 +91,22 @@ class TextFields extends React.Component {
     let appStatus = document.getElementById('standard-select-currency-native').value;
     let notification = document.getElementById('standard-number').value;
     
-    console.log('stuff', jobTitle, jobURL, date, description, notes, appStatus, notification)
-    debugger;
+    let myVariables = {
+      "companyName": company,
+      "title": jobTitle,
+      "dateApplied": date,
+      "link": jobURL,
+      "description": description,
+      "notes": notes,
+      "notification": notification,
+      "ContactId": "2",
+      "UserId": "4",
+      "status": appStatus 
+    }
+    mutation('http://localhost:3000/graphql', {
+      body: JSON.stringify({ queries.addApplication, })
+    })
 
-    
 
   }
   
