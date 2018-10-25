@@ -28,10 +28,12 @@ const UserType = new GraphQLObjectType({
     email: { type: GraphQLString },
     phone: { type: GraphQLInt },
     applications: { 
-      type: new GraphQLList(ApplicationsType),
+      type: ApplicationsType,
       resolve(parent, args) {
         // postgres query
-        return Application.find()
+        console.log(parent.id)
+        applicationQuery = `SELECT * FROM "public"."Applications" WHERE "UserId"=${parent.id}`
+        return db.conn.one(applicationQuery)
       }
     }
   })
@@ -48,7 +50,19 @@ const ApplicationsType = new GraphQLObjectType({
     link: { type: GraphQLString },
     description: { type: GraphQLString },
     notes: { type: GraphQLString },
-    contact: { type: GraphQLString }
+    status: { type: GraphQLString },
+    notification: { type: GraphQLString },
+    contactId: { type: GraphQLString },
+    UserId: { type: GraphQLString },
+    contact: { 
+      type: ContactType,
+      resolve(parent, args) {
+        // postgres query
+        console.log(parent.id)
+        applicationQuery = `SELECT * FROM "public"."Contacts" WHERE id=${parent.contactId}`
+        return db.conn.one(applicationQuery)
+      }
+    }
   })
 });
 
@@ -65,7 +79,6 @@ const ContactType = new GraphQLObjectType({
       type: new GraphQLList(ApplicationsType),
       resolve(parent, args) {
         // postgres query
-        return Application.find()
       }
     }
   })
@@ -152,23 +165,8 @@ const Mutation = new GraphQLObjectType({
         contact: { type: new GraphQLNonNull(GraphQLString) }
       },
       resolve(parents, args) {
-// <<<<<<< HEAD
-        // postgres save Application query
-        let newApplication = new Application({
-          companyname: args.companyname,
-          title: args.title,
-          dateapplied: args.dateapplied,
-          linktoapplications: args.linktoapplications,
-          description: args.description,
-          notes: args.notes,
-          status: args.status,
-          notifications: args.notifications
-        })
-        return newApplication.save()
-// =======
         query = `INSERT INTO "public"."Applications" ("companyName", "title", "dateApplied", "link", "description", "notes", "contact", "createdAt", "updatedAt") VALUES ('${args.companyName}', '${args.title}', '${args.dateApplied}', '${args.link}', '${args.description}', '${args.notes}', '${args.contact}' , '2018-10-23 01:09:38 +0000', '2018-10-23 01:09:38 +0000')`;
         return db.conn.one(query);
-// >>>>>>> 35f70f2412d54e6059e87cf1dcfdd423aba45468
       }
     },
     addContact: {
