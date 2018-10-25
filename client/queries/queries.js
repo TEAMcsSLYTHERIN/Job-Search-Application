@@ -14,7 +14,7 @@ allUserData = `{
       description
       notes
       notification
-      contactId
+      ContactId
       UserId
       contact {
         firstName

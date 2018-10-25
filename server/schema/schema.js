@@ -28,10 +28,10 @@ const UserType = new GraphQLObjectType({
     email: { type: GraphQLString },
     phone: { type: GraphQLInt },
     applications: { 
-      type: ApplicationsType,
+      type: new GraphQLList(ApplicationsType),
       resolve(parent, args) {
         applicationQuery = `SELECT * FROM "public"."Applications" WHERE "UserId"=${parent.id}`
-        return db.conn.one(applicationQuery)
+        return db.conn.many(applicationQuery)
       }
     }
   })
@@ -50,12 +50,12 @@ const ApplicationsType = new GraphQLObjectType({
     notes: { type: GraphQLString },
     status: { type: GraphQLString },
     notification: { type: GraphQLString },
-    contactId: { type: GraphQLString },
+    ContactId: { type: GraphQLString },
     UserId: { type: GraphQLString },
     contact: { 
       type: ContactType,
       resolve(parent, args) {
-        query = `SELECT * FROM "public"."Contacts" WHERE id=${parent.contactId}`
+        query = `SELECT * FROM "public"."Contacts" WHERE id=${parent.ContactId}`
         return db.conn.one(query)
       }
     }
