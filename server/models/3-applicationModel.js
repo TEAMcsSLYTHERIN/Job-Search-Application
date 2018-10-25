@@ -15,8 +15,8 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   Application.associate = function(models) {
-    Application.hasOne(models.User, {as:'user', constraints: false, allowNull: true, defaultValue: null});
-    // Application.hasOne(models.Contact, {as:'contact', constraints: false, allowNull: true, defaultValue: null});
+    Application.belongsTo(models.User, {as: 'applications', constraints: false, allowNull: true, defaultValue: null})  // paired with User Model's '.hasMany()'
+    Application.hasOne(models.Contact, {as: 'contact', constraints: false, allowNull: true, defaultValue: null})  // paired with Contact Model's 'hasMany()'
   };
 
   return Application;
