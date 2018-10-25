@@ -6,10 +6,14 @@ const pg = require('pg');
 const Sequelize = require('sequelize');
 const modelsFolder = path.join(__dirname, '../models')
 const conString = process.env.DB_URL
-const sequelize = new Sequelize(conString)
+const sequelize = new Sequelize('postgres://drypdfhs:DOY4nIJI5Xg33wWkkUKu9fK7UYQS53Zf@elmer.db.elephantsql.com:5432/drypdfhs', {
+  dialect: 'mysql',
+  define: {
+    timestamps: false
+  }
+})  // CREATING THE CONNECTION
 
 let db = {};
-
 
 sequelize  // TESTING THE CONNECTION
   .authenticate()

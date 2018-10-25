@@ -1,17 +1,51 @@
 import React, { Component } from 'react';
-import AuthContainer from './Auth/AuthContainer'
-import DashboardContainer from './Dashboard/DashboardContainer';
-import { Route, Switch } from 'react-router-dom';
+import { debug } from 'util';
+import { GoogleLogin } from 'react-google-login';
+import { GoogleLogout } from 'react-google-login';
+import { withCookies } from 'react-cookie';
 
 class App extends Component {
-  render() {
+    
+  responseGoogle(response) {
+    fetch('/auth', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `${response.tokenId}`
+      }
+    })
+  }
+
+  handleFail(e) {
+    console.log('in failure', e);
+  }
+
+  signOut() {
+    let auth2 = gapi.auth2.getAuthInstance();
+    auth2.signOut().then(res => {
+      console.log('User signed out.', res);
+    });
+  }
+
+  render(){
     return (
-      <div className="app">
-        <Route exact path="/" component={AuthContainer} />
-        <Route exact path="/dashboard" component={DashboardContainer} />
+      <div> 
+        <GoogleLogin
+          onClick={() => {this.onSignIn}}
+          clientId='785379560416-oee86k0flmbp00qkc52mcvaoqs6g307a.apps.googleusercontent.com'
+          buttonText='Login'
+          onSuccess={this.responseGoogle}
+          onFailure={this.handleFail}
+        />
+
+        <GoogleLogout
+          buttonText='Logout'
+          onLogoutSuccess={this.signOut}
+        />
+        <div className='container'>Hello World</div>
       </div>
     );
   }
-};
-
-export default App;
+  
+}
+export default withCookies(App);

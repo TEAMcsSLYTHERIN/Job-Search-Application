@@ -86,6 +86,10 @@
 /************************************************************************/
 /******/ ({
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
 /***/ "./client/actions/actionCreators.js":
 /*!******************************************!*\
   !*** ./client/actions/actionCreators.js ***!
@@ -98,6 +102,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 
 /***/ }),
 
+>>>>>>> ce702cc6ae476a05f3ce47ca224693aedcfedb85
 /***/ "./client/actions/actionTypes.js":
 /*!***************************************!*\
   !*** ./client/actions/actionTypes.js ***!
@@ -181,10 +186,19 @@ eval("module.exports = [{\"companyName\":\"Codesmith\",\"title\":\"Software Engi
 
 /***/ }),
 
+<<<<<<< HEAD
+>>>>>>> e62356ab8ab1c00e273e77a0f78eb4086f423653
+=======
+>>>>>>> ce702cc6ae476a05f3ce47ca224693aedcfedb85
 /***/ "./client/index.js":
 /*!*************************!*\
   !*** ./client/index.js ***!
   \*************************/
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> ce702cc6ae476a05f3ce47ca224693aedcfedb85
 /*! no exports provided */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -3631,6 +3645,10 @@ eval("var g;\n\n// This works in non-strict mode\ng = (function() {\n\treturn th
 /*!*******************************************!*\
   !*** (webpack)/buildin/harmony-module.js ***!
   \*******************************************/
+<<<<<<< HEAD
+>>>>>>> e62356ab8ab1c00e273e77a0f78eb4086f423653
+=======
+>>>>>>> ce702cc6ae476a05f3ce47ca224693aedcfedb85
 /*! no static exports found */
 /***/ (function(module, exports) {
 
