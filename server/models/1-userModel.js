@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   User.associate = function(models) {
-    User.hasMany(models.Application, {as: 'applicatons', constraints: false});
+    User.hasMany(models.Application, {as: 'applicatons', constraints: false}); // One-To-Many relationship
   };
 
   return User;

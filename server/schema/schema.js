@@ -1,7 +1,7 @@
 const graphql = require('graphql');
-const User = require('../models/userModel');
-const Application = require('../models/applicationModel');
-const Contact = require('../models/contactModel');
+const User = require('../models/1-userModel');
+const Application = require('../models/3-applicationModel');
+const Contact = require('../models/2-contactModel');
 const connectionString = process.env.DB_URL;
 const pgp = require('pg-promise')();
 const db = {}
@@ -28,10 +28,10 @@ const UserType = new GraphQLObjectType({
     email: { type: GraphQLString },
     phone: { type: GraphQLInt },
     applications: { 
-      type: new GraphQLList(ApplicationsType),
+      type: ApplicationsType,
       resolve(parent, args) {
-        // postgres query
-        return Application.find()
+        applicationQuery = `SELECT * FROM "public"."Applications" WHERE "UserId"=${parent.id}`
+        return db.conn.one(applicationQuery)
       }
     }
   })
@@ -48,7 +48,17 @@ const ApplicationsType = new GraphQLObjectType({
     link: { type: GraphQLString },
     description: { type: GraphQLString },
     notes: { type: GraphQLString },
-    contact: { type: GraphQLString }
+    status: { type: GraphQLString },
+    notification: { type: GraphQLString },
+    contactId: { type: GraphQLString },
+    UserId: { type: GraphQLString },
+    contact: { 
+      type: ContactType,
+      resolve(parent, args) {
+        query = `SELECT * FROM "public"."Contacts" WHERE id=${parent.contactId}`
+        return db.conn.one(query)
+      }
+    }
   })
 });
 
@@ -60,14 +70,7 @@ const ContactType = new GraphQLObjectType({
     firstName: { type: GraphQLString },
     lastName: { type: GraphQLString },
     email: { type: GraphQLString },
-    phone: { type: GraphQLInt },
-    applications: {
-      type: new GraphQLList(ApplicationsType),
-      resolve(parent, args) {
-        // postgres query
-        return Application.find()
-      }
-    }
+    phone: { type: GraphQLInt }
   })
 });
 
@@ -152,41 +155,20 @@ const Mutation = new GraphQLObjectType({
         contact: { type: new GraphQLNonNull(GraphQLString) }
       },
       resolve(parents, args) {
-// <<<<<<< HEAD
-        // postgres save Application query
-        let newApplication = new Application({
-          companyname: args.companyname,
-          title: args.title,
-          dateapplied: args.dateapplied,
-          linktoapplications: args.linktoapplications,
-          description: args.description,
-          notes: args.notes,
-          status: args.status,
-          notifications: args.notifications
-        })
-        return newApplication.save()
-// =======
         query = `INSERT INTO "public"."Applications" ("companyName", "title", "dateApplied", "link", "description", "notes", "contact", "createdAt", "updatedAt") VALUES ('${args.companyName}', '${args.title}', '${args.dateApplied}', '${args.link}', '${args.description}', '${args.notes}', '${args.contact}' , '2018-10-23 01:09:38 +0000', '2018-10-23 01:09:38 +0000')`;
         return db.conn.one(query);
-// >>>>>>> 35f70f2412d54e6059e87cf1dcfdd423aba45468
       }
     },
     addContact: {
       type: ContactType,
       args: {
-        name: { type: new GraphQLNonNull(GraphQLString) },
-        company: { type: new GraphQLNonNull(GraphQLString) },
+        firstName: { type: new GraphQLNonNull(GraphQLString) },
+        lastName: { type: new GraphQLNonNull(GraphQLString) },
         email: { type: new GraphQLNonNull(GraphQLString) },
-        phonenumber: { type: new GraphQLNonNull(GraphQLInt) }
+        phone: { type: new GraphQLNonNull(GraphQLInt) }
       },
       resolve(parent, args) {
-        // postgres save contact query
-        let newContact = new Contact({
-          name: args.name,
-          company: args.company,
-          email: args.email,
-          phonenumber: args.phonenumber
-        })
+        query = `INSERT INTO "public"."Contacts" ("firstName", "lastName", "email", "phone", "createdAt", "updatedAt") VALUES (${args.firstName}, ${args.lastName}, ${args.email}, ${args.phone}, '2013-07-13 14:35:00 +0000', '2013-07-13 14:35:00 +0000')`
         return newContact.save();
       }
     }

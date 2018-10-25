@@ -3,7 +3,12 @@ import data from '../data.json'
 
 const initialState = {
   data: data,
-  loggedIn: false
+  loggedIn: false,
+  id: '',
+  firstName: '',
+  lastName: '',
+  phone: '',
+
 }
 
 const jobSearchReducer = (state = initialState, action) => {
@@ -16,8 +21,19 @@ const jobSearchReducer = (state = initialState, action) => {
     case types.SET_LOGGED_IN:
     return {
       ...state,
-      loggedIn: !state.loggedIn
+      loggedIn: true
     };
+    case types.UPDATE_USER_DATA:
+    // console.log(action.payload.data.user.applications)
+    let newData = action.payload.data.user.applications;
+    let updateUserState = Object.assign({}, state);
+    updateUserState.id = action.payload.data.user.id;
+    updateUserState.firstName = action.payload.data.user.firstName;
+    updateUserState.lastName = action.payload.data.user.lastName;
+    updateUserState.phone = action.payload.data.user.phone;
+    updateUserState.data.push(newData)
+    console.log(updateUserState)
+    return updateUserState;
     default:
       return state;
   }
