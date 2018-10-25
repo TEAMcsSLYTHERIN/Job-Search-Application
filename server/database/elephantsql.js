@@ -44,10 +44,3 @@ db.sequelize = sequelize
 db.Sequelize = Sequelize
 
 module.exports = db;
-
-
-/* 
-SOURCES:
-https://sequelize.readthedocs.io/en/1.7.0/articles/express/
-https://scotch.io/tutorials/getting-started-with-node-express-and-postgres-using-sequelize
-*/
