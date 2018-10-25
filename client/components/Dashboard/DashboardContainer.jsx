@@ -12,10 +12,6 @@ const mapStateToProps = store => ({
   ...store.jobSearch
 })
 
-function updateState(s) {
-  console.log('store',s)
-}
-
 class DashboardContainer extends Component {
   constructor(props){
     super(props);
@@ -35,7 +31,6 @@ class DashboardContainer extends Component {
       })
     }
     const { data } = this.props;
-    console.log(this.props);
     return (
       <div className="table-container">
         <ReactTable 
