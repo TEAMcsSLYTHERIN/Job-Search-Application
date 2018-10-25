@@ -76,10 +76,10 @@ const RootQuery = new GraphQLObjectType({
   fields: {
     user: {
       type: UserType,
-      args: { UserId: { type: GraphQLID } },
+      args: { UserName: { type: GraphQLString } },
       resolve(parent, args) {
         // postgres query
-        query = `SELECT * FROM "public"."Users" WHERE id=${args.UserId}`;
+        query = `SELECT * FROM "public"."Users" WHERE "firstName"='${args.UserName}'`;
         return db.conn.one(query)
       }
     },
