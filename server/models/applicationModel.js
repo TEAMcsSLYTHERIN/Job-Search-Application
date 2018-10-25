@@ -9,11 +9,14 @@ module.exports = (sequelize, DataTypes) => {
     description: DataTypes.STRING,
     notes: DataTypes.STRING,
     status: DataTypes.ENUM('Resume Submitted', 'Coding Challenges', 'Recruiter Phone Screens', 'Technical Phone Screens', 'On-site Interviews'),
-    notification:  DataTypes.ENUM('1 Day', '2 Days', '3 Days', '7 Days', '1 Week', '2 Weeks')
+    notification:  DataTypes.ENUM('1 Day', '2 Days', '3 Days', '7 Days', '1 Week', '2 Weeks'),
+    user_id: DataType.INTEGER,
+    contact_id: DataType.INTEGER
   });
 
   Application.associate = function(models) {
-    models.Application.hasOne(models.User, {as:'user', constraints: false, allowNull: true, defaultValue: null});
+    Application.hasOne(models.User, {as:'user', constraints: false, allowNull: true, defaultValue: null});
+    Application.hasOne(models.Contact, {as:'user', constraints: false, allowNull: true, defaultValue: null});
   };
 
   return Application;

@@ -4,40 +4,7 @@ const authToken = '451bd935048fede9a44b505c60e25e21';   // Your Auth Token from 
 const twilio = require('twilio');
 const client = new twilio(accountSid, authToken);
 
-// Apps
-overallGoalApps
-monthlyGoalApps
-weeklyGoalApps
-dailyGoalApps
-
-totalHistoryApps
-totalMonthlyApps
-totalWeeklyApps
-totalDailyApps
-
-currentWeeklyApps
-currentDailyApps
-
-// Events
-totalWeeklyEvents
-totalDailyEvents
-
-currentWeeklyEvents
-currentDailyEvents
-
-// Follow-Ups
-totalWeeklyFollowUps
-totalDailyFollowUps
-
-currentWeeklyFollowUps
-currentDailyFollowUps
-
-
-
-const dailyMorningBodyText = `You have ${applicationAmount} follow-ups to send today to stay on track with your goals. You have ${followUpsCount} follow-ups to send today. You have ${eventCount} interviews/meetings to attend today.`;
-const dailyEveningBodyText = `You completed ${currentTotal} applications so far this week, great work! At this rate, you have to complete ${newAverage} applications per day to achieve your goal of ${goalTotal}. See you tomorrow!`;
-const weeklyBodyText = `IT'S THE END OF THE WEEK WOOO!!! You completed ${currentTotal} applications this week, leaving your remaining goal's total at ${goalTotal}. You completed ${followUpsTotal} follow-ups and crushed ${eventsTotal} interviews/meetings this week. Give yourself a break, you deserved it. See you next week!`;
-
+// Array of job objects
 
 module.exports = {
 // User has already set a daily, weekly, or monthly application goal
@@ -78,7 +45,15 @@ module.exports = {
       .then((message) => console.log('then after twilio ', message.sid));
     },
 
-    // followUpNotification: function(jobId, jobStatus, ) {
-    //   set a SMS notification for a specific job, with the specified amount of time
-    // }
+    followUpNotification: function(followUpId, selectedTime) {
+      use followUpId to source notification information, use selectedTime as input for message
+    },
+
+    eventNotification: function(eventId, selectedTime) {
+      
+    },
+
+    applicationNotification: function(applicationId, selectedTime) {
+      
+    }
 }

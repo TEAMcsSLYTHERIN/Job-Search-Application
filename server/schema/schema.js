@@ -24,8 +24,11 @@ const UserType = new GraphQLObjectType({
     id: { type: GraphQLString },
     firstName: { type: GraphQLString },
     lastName: { type: GraphQLString },
+    password: { type: GraphQLString },
+    email: { type: GraphQLString },
+    phone: { type: GraphQLInt },
     applications: { 
-      type: new GraphQLList(ApplicationType),
+      type: new GraphQLList(ApplicationsType),
       resolve(parent, args) {
         // postgres query
         return Application.find()
@@ -35,18 +38,17 @@ const UserType = new GraphQLObjectType({
 });
 
 // applications
-const ApplicationType = new GraphQLObjectType({
+const ApplicationsType = new GraphQLObjectType({
   name: 'Application',
   fields: () => ({
     id: { type: GraphQLString },
-    companyname: { type: GraphQLString },
+    companyName: { type: GraphQLString },
     title: { type: GraphQLString },
-    dateapplied: { type: GraphQLString },
-    linktoapplications: { type: GraphQLString },
+    dateApplied: { type: GraphQLString },
+    link: { type: GraphQLString },
     description: { type: GraphQLString },
     notes: { type: GraphQLString },
-    status: { type: GraphQLString },
-    notifications: { type: GraphQLString }
+    contact: { type: GraphQLString }
   })
 });
 
@@ -54,13 +56,13 @@ const ApplicationType = new GraphQLObjectType({
 const ContactType = new GraphQLObjectType({
   name: 'Contact',
   fields: () => ({
-    id: { type: GraphQLString },
+    id: { type: GraphQLID },
     firstName: { type: GraphQLString },
     lastName: { type: GraphQLString },
     email: { type: GraphQLString },
     phone: { type: GraphQLInt },
     applications: {
-      type: new GraphQLList(ApplicationType),
+      type: new GraphQLList(ApplicationsType),
       resolve(parent, args) {
         // postgres query
         return Application.find()
@@ -77,15 +79,23 @@ const RootQuery = new GraphQLObjectType({
       args: { UserId: { type: GraphQLID } },
       resolve(parent, args) {
         // postgres query
-        query = `SELECT * FROM "public"."users" WHERE id=${args.UserId}`;
+        query = `SELECT * FROM "public"."Users" WHERE id=${args.UserId}`;
         return db.conn.one(query)
       }
     },
     allUsers: {
       type: new GraphQLList(UserType),
       resolve(parent, args) {
-        query = `SELECT * FROM "public"."users"`;
+        query = `SELECT * FROM "public"."Users"`;
         return db.conn.many(query)
+      }
+    },
+    conatact: {
+      type: ContactType,
+      args: { ContactId: {type: GraphQLID} },
+      resolve(parent, args) {
+        query = `SELECT * FROM "public"."Contacts" WHERE id=${args.ContactId}`;
+        return db.conn.one(query);
       }
     },
     allContacts: {
@@ -93,6 +103,21 @@ const RootQuery = new GraphQLObjectType({
       resolve(parent, args) {
         const query = `SELECT * FROM "public"."Contacts"`;
         return db.conn.many(query)
+      }
+    },
+    application: {
+      type: ApplicationsType,
+      args: { ApplicationsId: {type: GraphQLID} },
+      resolve(parent, args) {
+        query = `SELECT * FROM "public"."Applications" WHERE id=${args.ApplicationsId}`;
+        return db.conn.one(query);
+      }
+    },
+    allApplications: {
+      type: new GraphQLList(ApplicationsType),
+      resolve(parent, args) {
+        query = `SELECT * FROM "public"."Applications"`
+        return db.conn.many(query);
       }
     }
   }
@@ -105,26 +130,29 @@ const Mutation = new GraphQLObjectType({
       type: UserType,
       args: {
         firstName: { type: new GraphQLNonNull(GraphQLString) },
-        lastName: { type: new GraphQLNonNull(GraphQLString) }
+        lastName: { type: new GraphQLNonNull(GraphQLString) },
+        password: { type: new GraphQLNonNull(GraphQLString) },
+        email: { type: new GraphQLNonNull(GraphQLString) },
+        phone: { type: new GraphQLNonNull(GraphQLInt) }
       },
       resolve(parent, args) {
-        query = `INSERT INTO "public"."users" ("firstName", "lastName", "createdAt", "updatedAt") VALUES ('${args.firstName}', '${args.lastName}', '2018-10-23 01:09:38 +0000', '2018-10-23 01:09:38 +0000')`;
+        query = `INSERT INTO "public"."Users" ("firstName", "lastName", "password", "email", "phone", "createdAt", "updatedAt") VALUES ('${args.firstName}', '${args.lastName}', '${args.password}', '${args.email}', '${args.phone}', '2018-10-23 01:09:38 +0000', '2018-10-23 01:09:38 +0000')`;
         return db.conn.one(query);
       }
     },
     addApplication: {
-      type: ApplicationType,
+      type: ApplicationsType,
       args: {
-        companyname: { type: new GraphQLNonNull(GraphQLString) },
+        companyName: { type: new GraphQLNonNull(GraphQLString) },
         title: { type: new GraphQLNonNull(GraphQLString) },
-        dateapplied: { type: new GraphQLNonNull(GraphQLString) },
-        linktoapplications: { type: new GraphQLNonNull(GraphQLString) },
+        dateApplied: { type: new GraphQLNonNull(GraphQLString) },
+        link: { type: new GraphQLNonNull(GraphQLString) },
         description: { type: new GraphQLNonNull(GraphQLString) },
         notes: { type: new GraphQLNonNull(GraphQLString) },
-        status: { type: new GraphQLNonNull(GraphQLString) },
-        notifications: { type: new GraphQLNonNull(GraphQLString) }
+        contact: { type: new GraphQLNonNull(GraphQLString) }
       },
       resolve(parents, args) {
+// <<<<<<< HEAD
         // postgres save Application query
         let newApplication = new Application({
           companyname: args.companyname,
@@ -137,6 +165,10 @@ const Mutation = new GraphQLObjectType({
           notifications: args.notifications
         })
         return newApplication.save()
+// =======
+        query = `INSERT INTO "public"."Applications" ("companyName", "title", "dateApplied", "link", "description", "notes", "contact", "createdAt", "updatedAt") VALUES ('${args.companyName}', '${args.title}', '${args.dateApplied}', '${args.link}', '${args.description}', '${args.notes}', '${args.contact}' , '2018-10-23 01:09:38 +0000', '2018-10-23 01:09:38 +0000')`;
+        return db.conn.one(query);
+// >>>>>>> 35f70f2412d54e6059e87cf1dcfdd423aba45468
       }
     },
     addContact: {

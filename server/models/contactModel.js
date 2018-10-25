@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   Contact.associate = function(models) {
-    models.Contact.hasOne(models.Application, {as: 'contact', constraints: false});
+    Contact.hasOne(models.Application, {as: 'contact', constraints: false});
   };
 
   return Contact;

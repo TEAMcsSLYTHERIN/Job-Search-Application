@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './app';
-import { Provider } from 'react-redux';
+import Root from './root';
 import store from './store';
+import "react-table/react-table.css";
+import "./styles.css"
 
-ReactDOM.render(<Provider store={store}><App /></Provider>, document.getElementById('root'));
+ReactDOM.render(<Root store={store} />, document.getElementById('root'));
