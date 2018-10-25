@@ -6,11 +6,11 @@ module.exports = (sequelize, DataTypes) => {
     lastName: DataTypes.STRING,
     password: DataTypes.STRING,
     email: DataTypes.STRING,
-    phone: DataTypes.INTEGER
+    phone: DataTypes.INTEGER,
   });
 
-  User.associate = function(models) { // Jobs model should be passed in
-    models.User.hasMany(models.Job, {as: 'job', constraints: false});
+  User.associate = function(models) {
+    User.hasMany(models.Application, {as: 'applicatons', constraints: false});
   };
 
   return User;

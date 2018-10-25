@@ -1,6 +1,6 @@
 const graphql = require('graphql');
 const User = require('../models/userModel');
-const Job = require('../models/jobModel');
+const Application = require('../models/applicationModel');
 const Contact = require('../models/contactModel');
 const connectionString = process.env.DB_URL;
 const pgp = require('pg-promise')();
@@ -27,19 +27,19 @@ const UserType = new GraphQLObjectType({
     password: { type: GraphQLString },
     email: { type: GraphQLString },
     phone: { type: GraphQLInt },
-    jobs: { 
-      type: new GraphQLList(JobType),
+    applications: { 
+      type: new GraphQLList(ApplicationsType),
       resolve(parent, args) {
         // postgres query
-        return Job.find()
+        return Application.find()
       }
     }
   })
 });
 
-// jobs
-const JobType = new GraphQLObjectType({
-  name: 'Job',
+// applications
+const ApplicationsType = new GraphQLObjectType({
+  name: 'Application',
   fields: () => ({
     id: { type: GraphQLString },
     companyName: { type: GraphQLString },
@@ -61,11 +61,11 @@ const ContactType = new GraphQLObjectType({
     lastName: { type: GraphQLString },
     email: { type: GraphQLString },
     phone: { type: GraphQLInt },
-    jobs: {
-      type: new GraphQLList(JobType),
+    applications: {
+      type: new GraphQLList(ApplicationsType),
       resolve(parent, args) {
         // postgres query
-        return Job.find()
+        return Application.find()
       }
     }
   })
@@ -105,18 +105,18 @@ const RootQuery = new GraphQLObjectType({
         return db.conn.many(query)
       }
     },
-    job: {
-      type: JobType,
-      args: { JobsId: {type: GraphQLID} },
+    application: {
+      type: ApplicationsType,
+      args: { ApplicationsId: {type: GraphQLID} },
       resolve(parent, args) {
-        query = `SELECT * FROM "public"."Jobs" WHERE id=${args.JobsId}`;
+        query = `SELECT * FROM "public"."Applications" WHERE id=${args.ApplicationsId}`;
         return db.conn.one(query);
       }
     },
-    allJobs: {
-      type: new GraphQLList(JobType),
+    allApplications: {
+      type: new GraphQLList(ApplicationsType),
       resolve(parent, args) {
-        query = `SELECT * FROM "public"."Jobs"`
+        query = `SELECT * FROM "public"."Applications"`
         return db.conn.many(query);
       }
     }
@@ -140,8 +140,8 @@ const Mutation = new GraphQLObjectType({
         return db.conn.one(query);
       }
     },
-    addJob: {
-      type: JobType,
+    addApplication: {
+      type: ApplicationsType,
       args: {
         companyName: { type: new GraphQLNonNull(GraphQLString) },
         title: { type: new GraphQLNonNull(GraphQLString) },
@@ -152,8 +152,23 @@ const Mutation = new GraphQLObjectType({
         contact: { type: new GraphQLNonNull(GraphQLString) }
       },
       resolve(parents, args) {
-        query = `INSERT INTO "public"."Jobs" ("companyName", "title", "dateApplied", "link", "description", "notes", "contact", "createdAt", "updatedAt") VALUES ('${args.companyName}', '${args.title}', '${args.dateApplied}', '${args.link}', '${args.description}', '${args.notes}', '${args.contact}' , '2018-10-23 01:09:38 +0000', '2018-10-23 01:09:38 +0000')`;
+// <<<<<<< HEAD
+        // postgres save Application query
+        let newApplication = new Application({
+          companyname: args.companyname,
+          title: args.title,
+          dateapplied: args.dateapplied,
+          linktoapplications: args.linktoapplications,
+          description: args.description,
+          notes: args.notes,
+          status: args.status,
+          notifications: args.notifications
+        })
+        return newApplication.save()
+// =======
+        query = `INSERT INTO "public"."Applications" ("companyName", "title", "dateApplied", "link", "description", "notes", "contact", "createdAt", "updatedAt") VALUES ('${args.companyName}', '${args.title}', '${args.dateApplied}', '${args.link}', '${args.description}', '${args.notes}', '${args.contact}' , '2018-10-23 01:09:38 +0000', '2018-10-23 01:09:38 +0000')`;
         return db.conn.one(query);
+// >>>>>>> 35f70f2412d54e6059e87cf1dcfdd423aba45468
       }
     },
     addContact: {

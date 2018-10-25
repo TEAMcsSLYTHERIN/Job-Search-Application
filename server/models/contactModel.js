@@ -8,8 +8,8 @@ module.exports = (sequelize, DataTypes) => {
     phone: DataTypes.INTEGER
   });
 
-  Contact.associate = function(models) { // Jobs model should be passed in
-    models.Contact.hasOne(models.Job, {as: 'contact', constraints: false});
+  Contact.associate = function(models) {
+    Contact.hasMany(models.Application, {as: 'contact', constraints: false});
   };
 
   return Contact;
