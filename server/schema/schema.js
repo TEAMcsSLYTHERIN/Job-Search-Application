@@ -152,10 +152,13 @@ const Mutation = new GraphQLObjectType({
         link: { type: new GraphQLNonNull(GraphQLString) },
         description: { type: new GraphQLNonNull(GraphQLString) },
         notes: { type: new GraphQLNonNull(GraphQLString) },
-        contact: { type: new GraphQLNonNull(GraphQLString) }
+        status: { type: new GraphQLNonNull(GraphQLString) },
+        notification: { type: new GraphQLNonNull(GraphQLInt) },
+        UserId: { type: new GraphQLNonNull(GraphQLString) },
+        ContactId: { type: new GraphQLNonNull(GraphQLString) }
       },
       resolve(parents, args) {
-        query = `INSERT INTO "public"."Applications" ("companyName", "title", "dateApplied", "link", "description", "notes", "contact", "createdAt", "updatedAt") VALUES ('${args.companyName}', '${args.title}', '${args.dateApplied}', '${args.link}', '${args.description}', '${args.notes}', '${args.contact}' , '2018-10-23 01:09:38 +0000', '2018-10-23 01:09:38 +0000')`;
+        query = `INSERT INTO "public"."Applications" ("companyName", "title", "dateApplied", "link", "description", "notes", "status", "notification", "UserId", "ContactId") VALUES ('${args.companyName}', '${args.title}', '${args.dateApplied}', '${args.link}', '${args.description}', '${args.notes}', '${args.status}', '${args.notification}', '${args.UserId}', '${args.ContactId}')`;
         return db.conn.one(query);
       }
     },
