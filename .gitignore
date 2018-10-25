@@ -73,3 +73,6 @@ typings/
 
 # Serverless directories
 .serverless
+
+# Webpack bundle
+dist/bundle.js
