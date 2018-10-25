@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "main": "webpack.config.js",
+  "files": [ 
+    "dist/bundle.js",
+    "dist/index.html"
+  ],
   "scripts": {
     "build": "webpack",
     "start": "concurrently --kill-others-on-fail \"yarn start:server\" \"yarn start:client\"",
@@ -31,12 +35,14 @@
     "express-graphql": "^0.6.12",
     "graphql": "^14.0.2",
     "graphql-tag": "^2.10.0",
+    "node-fetch": "^2.2.0",
     "pg": "^7.5.0",
     "pg-hstore": "^2.3.2",
     "pg-promise": "^8.5.1",
     "react": "^16.5.2",
     "react-cookie": "^3.0.4",
     "react-dom": "^16.5.2",
+    "react-google-login": "^3.2.1",
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.3.1",
     "react-table": "^6.8.6",

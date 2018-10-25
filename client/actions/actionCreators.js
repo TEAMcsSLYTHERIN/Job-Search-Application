@@ -7,4 +7,4 @@ export const testData = (data) => ({
 
 export const setLoggedIn = () => ({
   type: types.SET_LOGGED_IN
-})
+});
