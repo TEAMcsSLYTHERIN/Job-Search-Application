@@ -3,7 +3,6 @@ import Button from '@material-ui/core/Button';
 import { Link } from 'react-router-dom';
 
 const AuthButton = props => {
-  console.log(props)
   return (
     <Link to='/dashboard'>
       <Button

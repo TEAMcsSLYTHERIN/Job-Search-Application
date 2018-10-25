@@ -1,5 +1,4 @@
-allUserData = `
-{
+allUserData = `{
   user(UserName: "Draco") {
     id
     firstName
@@ -25,8 +24,7 @@ allUserData = `
       }
     }
   }
-}
-`
+}`;
 
 
 
