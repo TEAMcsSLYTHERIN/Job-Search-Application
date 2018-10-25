@@ -8,8 +8,15 @@ const client = new twilio(accountSid, authToken);
 
 module.exports = {
 // User has already set a daily, weekly, or monthly application goal
-  applicationNotification: function(applicationId, selectedTime) {
+  applicationNotification: function(companyName, userPhone, selectedTime) {
+    const applicationNotificationBodyText = `Your ${companyName} application requires your attention.`  
     
+    client.messages.create({
+      body: applicationNotificationBodyText,
+      to: userPhone,
+      from: '+19564773577'
+    })
+    .then((message) => console.log('then after twilio ', message.sid));
   },
 
   dailyMorningUpdate: function(userPhone, goalTotal, currentTotal, dailyGoal, followUps, events) {

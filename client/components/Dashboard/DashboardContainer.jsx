@@ -6,6 +6,7 @@ import { query } from 'wasp-graphql';
 import * as queries from '../../queries/queries';
 import store from '../../store';
 import * as types from '../../actions/actionCreators';
+import Button from '@material-ui/core/Button';
 
 const mapStateToProps = store => ({
   ...store.jobSearch
@@ -19,6 +20,9 @@ class DashboardContainer extends Component {
   constructor(props){
     super(props);
   }
+
+  
+
   render(){
     if(this.props.loggedIn === false) {
       query('http://localhost:3000/graphql', queries.allUserData)
@@ -107,6 +111,9 @@ class DashboardContainer extends Component {
             );
           }}
         />
+      <Button variant="contained" color="secondary" onClick={ twilio. }>
+        Send Notification
+      </Button>
       </div>
     );
   }

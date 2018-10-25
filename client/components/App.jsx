@@ -46,6 +46,5 @@ class App extends Component {
       </div>
     );
   }
-  
 }
 export default withCookies(App);

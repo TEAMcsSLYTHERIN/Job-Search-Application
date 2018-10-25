@@ -9,28 +9,12 @@ const graphqlHTTP = require('express-graphql');
 const schema = require('./schema/schema');
 const db = require('./database/elephantsql.js')
 const { PassThrough } = require('stream');
+const twilio = require('./twilio/twilio')
 
-function graphqlMiddlewareWrapper(graphqlMiddleware) {
-  return (req, res, next) => {
-      const resProxy = new PassThrough();
-      resProxy.headers = new Map();
-      resProxy.statusCode = 200;
-      resProxy.setHeader = (name, value) => {
-          resProxy.headers.set(name, value);
-      };
-      res.graphqlResponse = (cb) => {
-          res.statusCode = resProxy.statusCode;
-          resProxy.headers.forEach((value, name) => {
-              res.setHeader(name, value);
-          });
-          resProxy.pipe(res).on('finish', cb);
-      };
-      graphqlMiddleware(req, resProxy).then(() => next(), next);
-  };
-}
 
 db.sequelize.sync().then(function() {
   //MAKING SURE DATABASE TABLES & MODELS GET ASSOCIATED BEFORE STARTING UP THE SERVER
+    
   app.use(express.static('./dist'))
   app.use(express.static('./static'))
 
@@ -41,9 +25,12 @@ db.sequelize.sync().then(function() {
   app.use('/graphql', graphqlHTTP({
     schema,
     graphiql: true
-  }))
+  }),
+  (req, res, next) => {
+    console.log('njsdnfafsd')
+  })
 
-
+  app.get()
 
   app.get('/', (req, res) => {
     res.sendFile('index.html')
