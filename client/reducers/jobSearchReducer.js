@@ -31,8 +31,9 @@ const jobSearchReducer = (state = initialState, action) => {
     updateUserState.firstName = action.payload.data.user.firstName;
     updateUserState.lastName = action.payload.data.user.lastName;
     updateUserState.phone = action.payload.data.user.phone;
-    updateUserState.data.push(newData)
-    console.log(updateUserState)
+    for(let i = 0; i < newData.length; i++) {
+      updateUserState.data.push(newData[i]);
+    }
     return updateUserState;
     default:
       return state;
