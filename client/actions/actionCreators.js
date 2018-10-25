@@ -13,3 +13,7 @@ export const updateUserInformation = (userData) => ({
   type: types.UPDATE_USER_DATA,
   payload: userData
 })
+
+export const formCompleted = () => ({
+  type: types.FORM_COMPLETED
+})

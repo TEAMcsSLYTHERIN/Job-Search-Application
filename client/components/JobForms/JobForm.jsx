@@ -8,7 +8,15 @@ import { withStyles } from '@material-ui/core/styles';
 import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import { Redirect } from 'react-router-dom';
+import store from '../../store';
+import * as types from '../../actions/actionCreators';
 
+const mapStateToProps = (state) => {
+  return {
+    state: state
+  }
+}
 const styles = theme => ({
   container: {
     display: 'flex',
@@ -90,7 +98,7 @@ class TextFields extends React.Component {
     let notes = document.getElementById('standard-multiline-static').value;
     let appStatus = document.getElementById('standard-select-currency-native').value;
     let notification = document.getElementById('standard-number').value;
-    
+    notification = Number(notification);
     let myVariables = {
       "companyName": company,
       "title": jobTitle,
@@ -103,21 +111,25 @@ class TextFields extends React.Component {
       "UserId": "4",
       "status": appStatus 
     }
+    let addAppQuery = queries.addApplication;
     mutation('http://localhost:3000/graphql', {
-      body: JSON.stringify({ queries.addApplication, })
+      body: JSON.stringify({ query: addAppQuery, variables: myVariables })
     })
-
-
+    console.log('after muation')
+    store.dispatch(types.formCompleted())
   }
   
   handleSubmit(event) {
     event.preventDefault();
-    console.log('event.target.value', event.target.value);
+    console.log('in submited redirect')
     debugger;
   }
 
   render() {
     const { classes } = this.props;
+    if(this.props.state.jobSearch.formCompleted) {
+      return <Redirect to="/dashboard" />
+    }
 
     return (
       <div>
@@ -226,7 +238,7 @@ class TextFields extends React.Component {
       <label htmlFor="contained-button-file">
         <Button 
           onClick={(e) => {this.handleClick(e)}}
-          // onSubmit={(e) => {this.handleClick(e)}}
+          onSubmit={(e) => {this.handleClick(e)}}
           color="secondary" 
           variant="contained" 
           component="span" 
@@ -244,7 +256,7 @@ TextFields.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(TextFields);
+export default connect(mapStateToProps)(withStyles(styles)(TextFields));
 
 
 

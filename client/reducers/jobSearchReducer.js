@@ -4,11 +4,11 @@ import data from '../data.json'
 const initialState = {
   data: data,
   loggedIn: false,
+  formCompleted: false,
   id: '',
   firstName: '',
   lastName: '',
   phone: '',
-
 }
 
 const jobSearchReducer = (state = initialState, action) => {
@@ -23,6 +23,10 @@ const jobSearchReducer = (state = initialState, action) => {
       ...state,
       loggedIn: true
     };
+    case types.FORM_COMPLETED:
+    let formCompletedState = Object.assign({}, state);
+    formCompletedState.formCompleted = true;
+    return formCompletedState;
     case types.UPDATE_USER_DATA:
     // console.log(action.payload.data.user.applications)
     let newData = action.payload.data.user.applications;
