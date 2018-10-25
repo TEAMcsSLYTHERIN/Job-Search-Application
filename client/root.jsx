@@ -26,18 +26,18 @@ class Root extends Component {
       <Provider store={store}>
         <HashRouter>
           <Switch>
-            <Route exact path="/" render={() => !this.props.allCookies.authorized ? ( 
-              <AuthContainer cookies={this.props.allCookies.authorized} /> 
+            <Route exact path="/" render={() => !this.props.allCookies.userId ? ( 
+              <AuthContainer cookies={this.props.allCookies.userId} /> 
               ) : (
               <Redirect to="/dashboard" />
             )} />
-            <Route exact path="/dashboard" render={() => this.props.allCookies.authorized ? ( 
-              <DashboardContainer cookies={this.props.allCookies.authorized} /> 
+            <Route exact path="/dashboard" render={() => this.props.allCookies.userId ? ( 
+              <DashboardContainer cookies={this.props.allCookies.userId} /> 
               ) : (
               <Redirect to="/" />
             )} />
-            <Route exact path="/form" render={() => this.props.allCookies.authorized ? ( 
-              <JobForm cookies={this.props.allCookies.authorized} /> 
+            <Route exact path="/form" render={() => this.props.allCookies.userId ? ( 
+              <JobForm cookies={this.props.allCookies.userId} /> 
               ) : (
               <Redirect to="/" />
             )} />

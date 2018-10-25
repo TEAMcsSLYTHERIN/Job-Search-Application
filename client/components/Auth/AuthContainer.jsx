@@ -4,6 +4,8 @@ import {connect} from 'react-redux';
 import * as actions from '../../actions/actionCreators'
 import { GoogleLogin } from 'react-google-login';
 import { GoogleLogout } from 'react-google-login';
+import { CookiesProvider, withCookies} from 'react-cookie';
+
 
 const mapStateToProps = store => ({
   ...store.jobSearch
@@ -46,10 +48,11 @@ class AuthContainer extends Component {
         <Auth
           isLoggedIn={isLoggedIn} 
           setLoggedIn={setLoggedIn}
+          cookies={this.props.allCookies}
         />
       </div>
     )
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AuthContainer);
+export default withCookies(connect(mapStateToProps, mapDispatchToProps)(AuthContainer));

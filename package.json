@@ -50,6 +50,7 @@
     "redux-wasp": "^0.2.1",
     "sequelize": "^4.41.0",
     "twilio": "^3.23.1",
+    "wasp-graphql": "^0.2.0",
     "webpack": "^4.20.2"
   },
   "devDependencies": {
