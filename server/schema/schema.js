@@ -28,10 +28,10 @@ const UserType = new GraphQLObjectType({
     email: { type: GraphQLString },
     phone: { type: GraphQLInt },
     applications: { 
-      type: new GraphQLList(ApplicationsType),
+      type: ApplicationsType,
       resolve(parent, args) {
-        // postgres query
-        return Application.find()
+        applicationQuery = `SELECT * FROM "public"."Applications" WHERE "UserId"=${parent.id}`
+        return db.conn.one(applicationQuery)
       }
     }
   })
@@ -48,7 +48,17 @@ const ApplicationsType = new GraphQLObjectType({
     link: { type: GraphQLString },
     description: { type: GraphQLString },
     notes: { type: GraphQLString },
-    contact: { type: GraphQLString }
+    status: { type: GraphQLString },
+    notification: { type: GraphQLString },
+    contactId: { type: GraphQLString },
+    UserId: { type: GraphQLString },
+    contact: { 
+      type: ContactType,
+      resolve(parent, args) {
+        query = `SELECT * FROM "public"."Contacts" WHERE id=${parent.contactId}`
+        return db.conn.one(query)
+      }
+    }
   })
 });
 
@@ -60,14 +70,7 @@ const ContactType = new GraphQLObjectType({
     firstName: { type: GraphQLString },
     lastName: { type: GraphQLString },
     email: { type: GraphQLString },
-    phone: { type: GraphQLInt },
-    applications: {
-      type: new GraphQLList(ApplicationsType),
-      resolve(parent, args) {
-        // postgres query
-        return Application.find()
-      }
-    }
+    phone: { type: GraphQLInt }
   })
 });
 
@@ -159,19 +162,13 @@ const Mutation = new GraphQLObjectType({
     addContact: {
       type: ContactType,
       args: {
-        name: { type: new GraphQLNonNull(GraphQLString) },
-        company: { type: new GraphQLNonNull(GraphQLString) },
+        firstName: { type: new GraphQLNonNull(GraphQLString) },
+        lastName: { type: new GraphQLNonNull(GraphQLString) },
         email: { type: new GraphQLNonNull(GraphQLString) },
-        phonenumber: { type: new GraphQLNonNull(GraphQLInt) }
+        phone: { type: new GraphQLNonNull(GraphQLInt) }
       },
       resolve(parent, args) {
-        // postgres save contact query
-        let newContact = new Contact({
-          name: args.name,
-          company: args.company,
-          email: args.email,
-          phonenumber: args.phonenumber
-        })
+        query = `INSERT INTO "public"."Contacts" ("firstName", "lastName", "email", "phone", "createdAt", "updatedAt") VALUES (${args.firstName}, ${args.lastName}, ${args.email}, ${args.phone}, '2013-07-13 14:35:00 +0000', '2013-07-13 14:35:00 +0000')`
         return newContact.save();
       }
     }

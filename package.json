@@ -51,6 +51,7 @@
     "sequelize": "^4.41.0",
     "stream": "0.0.2",
     "twilio": "^3.23.1",
+    "wasp-graphql": "^0.2.0",
     "webpack": "^4.20.2"
   },
   "devDependencies": {

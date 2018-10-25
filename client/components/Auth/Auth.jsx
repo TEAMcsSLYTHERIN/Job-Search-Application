@@ -12,11 +12,22 @@ import LockIcon from '@material-ui/icons/Lock';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import withStyles from '@material-ui/core/styles/withStyles';
-
+import store from '../../store';
+import * as types from '../../actions/actionCreators';
 import AuthButton from './AuthButton';
-
 import { GoogleLogin } from 'react-google-login';
 import { GoogleLogout } from 'react-google-login';
+import { CookiesProvider, withCookies} from 'react-cookie';
+import { query } from 'wasp-graphql';
+
+// import GraphQL Queries
+import * as queries from '../../queries/queries';
+
+const mapStateToProps = (state) => {
+  return {
+    state: state
+  }
+}
 
 const styles = theme => ({
   layout: {
@@ -53,15 +64,23 @@ const styles = theme => ({
 class Auth extends Component {
   constructor(props) {
     super(props)
+
   }
 
-  responseGoogle(response) {
+  responseGoogle(response, props) {
     fetch('/auth', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `${response.tokenId}`
       }
+    }).then(res => {
+      query('http://localhost:3000/graphql', queries.allUserData)
+      .then(res => {
+        return res.json()
+      }).then(resp => {
+        store.dispatch(types.updateUserInformation(resp))
+      })
     })
   }
 
@@ -77,6 +96,12 @@ class Auth extends Component {
   }
 
 render() {
+  const { cookies } = this.props;
+  if(cookies.get('authorized')) {
+    cookies.remove('authorized');
+    cookies.set('userId', this.props.state.jobSearch.id, '/')
+  }
+  console.log(this.props)
   return (
       <React.Fragment>
         <CssBaseline />
@@ -118,7 +143,6 @@ render() {
                 onSuccess={this.responseGoogle}
                 onFailure={this.handleFail}
             />
-
             </form>
           </Paper>
         </main>
@@ -131,4 +155,4 @@ Auth.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Auth);
+export default withCookies(connect(mapStateToProps)(withStyles(styles)(Auth)));
