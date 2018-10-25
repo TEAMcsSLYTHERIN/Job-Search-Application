@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-
+import { query } from 'wasp-graphql';
+import * as queries from '../../queries/queries';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
@@ -59,14 +60,18 @@ class TextFields extends React.Component {
   constructor(props) {
     super(props)
 
+    this.handleClick = this.handleClick.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this);
   }
+
   state = {
-    name: '',
-    age: '',
-    multiline: 'Controlled',
-    currency: 'EUR',
     company: '',
+    jobTitle: '',
+    jobURL: '',
+    notes: '',
+    description: '',
+    appStatus: '',
+    notification: ''
   };
 
   handleChange = name => event => {
@@ -74,14 +79,29 @@ class TextFields extends React.Component {
       [name]: event.target.value,
     });
   };
+
+  handleClick(event) {
+    event.preventDefault();
+    let company = document.getElementById('standard-name').value;
+    let jobTitle = document.getElementById('standard-uncontrolled').value;
+    let jobURL = document.getElementById('standard-required').value;
+    let date = document.getElementById('date').value;
+    let description = document.getElementById('standard-helperText').value;
+    let notes = document.getElementById('standard-multiline-static').value;
+    let appStatus = document.getElementById('standard-select-currency-native').value;
+    let notification = document.getElementById('standard-number').value;
+    
+    console.log('stuff', jobTitle, jobURL, date, description, notes, appStatus, notification)
+    debugger;
+
+    
+
+  }
   
   handleSubmit(event) {
-
     event.preventDefault();
-    console.log('event.target', event.target);
-    
+    console.log('event.target.value', event.target.value);
     debugger;
-    // dispatch action to
   }
 
   render() {
@@ -99,14 +119,16 @@ class TextFields extends React.Component {
           margin="normal"
         />
         <TextField
+          value={this.state.jobTitle}
+          onChange={this.handleChange('jobTitle')}
           id="standard-uncontrolled"
           label="Job Title"
-          defaultValue=""
           className={classes.textField}
           margin="normal"
         />
         <TextField
           id="date"
+          onChange={this.handleChange('date')}
           label="Date Applied"
           type="date"
           defaultValue="2018-10-25"
@@ -118,6 +140,7 @@ class TextFields extends React.Component {
         />
         <TextField
           required
+          onChange={this.handleChange('jobURL')}
           id="standard-required"
           label="Link to Job Posting"
           defaultValue="Hello World"
@@ -125,6 +148,7 @@ class TextFields extends React.Component {
           margin="normal"
         />
         <TextField
+        onChange={this.handleChange('notes')}
           id="standard-multiline-static"
           label="NOTES"
           multiline
@@ -134,6 +158,7 @@ class TextFields extends React.Component {
           margin="normal"
         />
         <TextField
+        onChange={this.handleChange('description')}
           id="standard-helperText"
           label="Description"
           defaultValue=""
@@ -142,17 +167,18 @@ class TextFields extends React.Component {
           margin="normal"
         />
         <TextField
-            id="standard-number"
-            label="Notification Frequency"
-            value={this.state.age}
-            onChange={this.handleChange('age')}
-            type="number"
-            className={classes.textField}
-            helperText="# of Days"
-            InputLabelProps={{
-              shrink: true,
-            }}
-            margin="normal"
+
+          id="standard-number"
+          label="Notification Frequency"
+          value={this.state.age}
+          onChange={this.handleChange('notification')}
+          type="number"
+          className={classes.textField}
+          helperText="# of Days"
+          InputLabelProps={{
+            shrink: true,
+          }}
+          margin="normal"
           />
         <TextField
           id="standard-select-currency-native"
@@ -160,7 +186,7 @@ class TextFields extends React.Component {
           label="Application Status"
           className={classes.textField}
           value={this.state.currency}
-          onChange={this.handleChange('currency')}
+          onChange={this.handleChange('appStatus')}
           SelectProps={{
             native: true,
             MenuProps: {
@@ -176,33 +202,19 @@ class TextFields extends React.Component {
             </option>
           ))}
         </TextField>
-        
-      <Button variant="contained" color="secondary" className={classes.button}>
-        SUBMIT
-      </Button>
-      <Button 
-        type="submit" 
-        variant="contained" 
-        color="primary" 
-        href="#contained-buttons" 
-        className={classes.button}>
-        OR SUBMIT HERE
-      </Button>
+{/*        
 
       <input
-        onClick={() => {this.handleSubmit()}}
-        onSubmit={this.handleSubmit}
         type="submit"
         accept="image/*"
         className={classes.input}
         // id="contained-button-file"
         multiple
-      />
+      /> */}
       <label htmlFor="contained-button-file">
         <Button 
-          onClick={(e) => {this.handleSubmit(e)}}
-          value="submit"
-          type="submit"
+          onClick={(e) => {this.handleClick(e)}}
+          // onSubmit={(e) => {this.handleClick(e)}}
           color="secondary" 
           variant="contained" 
           component="span" 
