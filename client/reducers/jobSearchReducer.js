@@ -1,8 +1,7 @@
 import * as types from '../actions/actionTypes';
-import data from '../data.json'
 
 const initialState = {
-  data: data,
+  data: [],
   loggedIn: false,
   formCompleted: false,
   id: '',
@@ -35,6 +34,7 @@ const jobSearchReducer = (state = initialState, action) => {
     updateUserState.firstName = action.payload.data.user.firstName;
     updateUserState.lastName = action.payload.data.user.lastName;
     updateUserState.phone = action.payload.data.user.phone;
+    updateUserState.data = [];
     for(let i = 0; i < newData.length; i++) {
       updateUserState.data.push(newData[i]);
     }
