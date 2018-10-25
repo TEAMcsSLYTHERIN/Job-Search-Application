@@ -8,52 +8,44 @@ const client = new twilio(accountSid, authToken);
 
 module.exports = {
 // User has already set a daily, weekly, or monthly application goal
-    dailyMorningUpdate: function(userPhone, goalTotal, currentTotal, dailyGoal, followUps, events) {
-      const applicationAmount = (goalTotal - (currentTotal + dailyGoal))
-      const followUpsCount = followUps.length;
-      const eventCount = events.length;
-      const dailyMorningBodyText = `You have ${applicationAmount} follow-ups to send today to stay on track with your goals. You have ${followUpsCount} follow-ups to send today. You have ${eventCount} interviews/meetings to attend today.`;
+  applicationNotification: function(applicationId, selectedTime) {
+    
+  },
 
-      client.messages.create({
-        body: dailyMorningBodyText,
-        to: userPhone,
-        from: '+19564773577'
-      })
-      .then((message) => console.log('then after twilio ', message.sid));
-    },
+  dailyMorningUpdate: function(userPhone, goalTotal, currentTotal, dailyGoal, followUps, events) {
+    const applicationAmount = (goalTotal - (currentTotal + dailyGoal))
+    const followUpsCount = followUps.length;
+    const eventCount = events.length;
+    const dailyMorningBodyText = `You have ${applicationAmount} follow-ups to send today to stay on track with your goals. You have ${followUpsCount} follow-ups to send today. You have ${eventCount} interviews/meetings to attend today.`;
 
-    dailyEveningUpdate: function(userPhone, goalTotal, currentTotal) {
-      const newAverage = (goalTotal - currentTotal)/(Math.floor(/* 5 - current # of business day */))
-      const dailyEveningBodyText = `You completed ${currentTotal} applications so far this week, great work! At this rate, you have to complete ${newAverage} applications per day to achieve your goal of ${goalTotal}. See you tomorrow!`;
+    client.messages.create({
+      body: dailyMorningBodyText,
+      to: userPhone,
+      from: '+19564773577'
+    })
+    .then((message) => console.log('then after twilio ', message.sid));
+  },
 
-      client.messages.create({
-        body: dailyEveningBodyText,
-        to: userPhone,
-        from: '+19564773577'
-      })
-      .then((message) => console.log('then after twilio ', message.sid));
-    },
+  dailyEveningUpdate: function(userPhone, goalTotal, currentTotal) {
+    const newAverage = (goalTotal - currentTotal)/(Math.floor(/* 5 - current # of business day */))
+    const dailyEveningBodyText = `You completed ${currentTotal} applications so far this week, great work! At this rate, you have to complete ${newAverage} applications per day to achieve your goal of ${goalTotal}. See you tomorrow!`;
 
-    weeklyUpdate: function(userPhone, goalTotal, currentTotal, followUpsTotal, eventsTotal) {
-      const weeklyBodyText = `IT'S THE END OF THE WEEK WOOO!!! You completed ${currentTotal} applications this week, leaving your remaining goal's total at ${goalTotal}. You completed ${followUpsTotal} follow-ups and crushed ${eventsTotal} interviews/meetings this week. Give yourself a break, you deserved it. See you next week!`;
+    client.messages.create({
+      body: dailyEveningBodyText,
+      to: userPhone,
+      from: '+19564773577'
+    })
+    .then((message) => console.log('then after twilio ', message.sid));
+  },
 
-      client.messages.create({
-        body: weeklyBodyText,
-        to: userPhone,
-        from: '+19564773577'
-      })
-      .then((message) => console.log('then after twilio ', message.sid));
-    },
+  weeklyUpdate: function(userPhone, goalTotal, currentTotal, followUpsTotal, eventsTotal) {
+    const weeklyBodyText = `IT'S THE END OF THE WEEK WOOO!!! You completed ${currentTotal} applications this week, leaving your remaining goal's total at ${goalTotal}. You completed ${followUpsTotal} follow-ups and crushed ${eventsTotal} interviews/meetings this week. Give yourself a break, you deserved it. See you next week!`;
 
-    followUpNotification: function(followUpId, selectedTime) {
-      // use followUpId to source notification information, use selectedTime as input for message
-    },
-
-    eventNotification: function(eventId, selectedTime) {
-      
-    },
-
-    applicationNotification: function(applicationId, selectedTime) {
-      
-    }
+    client.messages.create({
+      body: weeklyBodyText,
+      to: userPhone,
+      from: '+19564773577'
+    })
+    .then((message) => console.log('then after twilio ', message.sid));
+  }
 }
