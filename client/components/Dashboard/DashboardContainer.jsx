@@ -17,10 +17,15 @@ class DashboardContainer extends Component {
     super(props);
   }
 
-  
+  twilioTrigger() {
+    query('http://localhost:3000/twilio')
+      .then((repsonse) => {
+        console.log('twilio trigger post-query', response)
+      })
+  }
 
   render(){
-    if(this.props.loggedIn === false) {
+    if (this.props.loggedIn === false) {
       query('http://localhost:3000/graphql', queries.allUserData)
       .then(res => {
         return res.json()
@@ -106,7 +111,7 @@ class DashboardContainer extends Component {
             );
           }}
         />
-      <Button variant="contained" color="secondary" onClick={ twilio. }>
+      <Button variant="contained" color="secondary" onClick={ this.twilioTrigger }>
         Send Notification
       </Button>
       </div>
